@@ -1,0 +1,79 @@
+--------------------------------------------------------------------------------
+--  MakeOps
+--  Copyright (C) 2026 Marcin Kaim
+--  SPDX-License-Identifier: GPL-3.0-or-later
+--------------------------------------------------------------------------------
+
+project MakeOps_App is
+
+   -- SCENARIO VARIABLES
+   -- Controls the build mode. Default is "dev" for safety and debugging.
+   -- Usage: gprbuild -XBUILD_MODE=prod
+   type Build_Mode_Type is ("dev", "prod", "profile");
+   Build_Mode : Build_Mode_Type := external ("BUILD_MODE", "dev");
+
+   -- DIRECTORY CONFIGURATION
+   -- Paths are relative to this .gpr file (repository root).
+   for Source_Dirs use (".", "app", "core", "sys");
+   for Object_Dir  use "../build/obj-app";
+   for Exec_Dir    use "../build/bin";
+   for Main        use ("main.adb");
+
+   -- NAMING CONFIGURATION
+   package Builder is
+      -- The resulting binary will be named 'mko' (e.g., mko)
+      for Executable ("main.adb") use "mko";
+   end Builder;
+
+   -- COMPILER CONFIGURATION (Deep Tech Tuning)
+   package Compiler is
+      -- Common flags for all modes (Modern Ada 2022, warnings enabled)
+      Common_Switches := ("-gnat2022", "-gnatwa", "-gnatyg", "-fstack-check");
+
+      case Build_Mode is
+         when "dev" =>
+            -- Development: No optimization, debug info, assertions enabled
+            for Default_Switches ("Ada") use Common_Switches &
+               ("-O0", "-g", "-gnata");
+
+         when "prod" =>
+            -- Production: Aggressive optimization for i7-13850HX
+            for Default_Switches ("Ada") use Common_Switches &
+               ("-O3",              -- High optimization level
+                "-gnatn",           -- Enable inlining across units
+                "-gnatp",           -- Suppress all checks (MAX PERFORMANCE - USE WITH CAUTION)
+                "-march=native",    -- Optimize instructions for the host CPU
+                "-ffunction-sections", 
+                "-fdata-sections");
+
+         when "profile" =>
+            -- Profiling: For gprof analysis
+            for Default_Switches ("Ada") use Common_Switches &
+               ("-O1", "-g", "-pg");
+      end case;
+   end Compiler;
+
+   -- BINDER CONFIGURATION
+   package Binder is
+      -- -Es: Store tracebacks in exception occurrences (crucial for debugging)
+      case Build_Mode is
+         when "prod" =>
+            for Default_Switches ("Ada") use ("-Es", "-static");
+         when others =>
+            for Default_Switches ("Ada") use ("-Es");
+      end case;
+   end Binder;
+
+   -- LINKER CONFIGURATION
+   package Linker is
+      case Build_Mode is
+         when "prod" =>
+            -- Strip dead code in production to reduce binary size
+            for Default_Switches ("Ada") use (
+               "-Wl,--gc-sections");
+         when others =>
+            null;
+      end case;
+   end Linker;
+
+end MakeOps_App;

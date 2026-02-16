@@ -1,0 +1,42 @@
+--------------------------------------------------------------------------------
+--  MakeOps
+--  Copyright (C) 2026 Marcin Kaim
+--  SPDX-License-Identifier: GPL-3.0-or-later
+--------------------------------------------------------------------------------
+
+with "aunit"; -- Requires: sudo apt install libaunit-dev
+
+project MakeOps_Tests is
+
+   -- DIRECTORY CONFIGURATION
+   -- Note: We include 'source' (shared logic) but NOT 'source/app'
+   -- to avoid conflict with the production main.adb.
+   for Source_Dirs use (".", "tests", "core");
+   for Object_Dir  use "../build/obj-tests";
+   for Exec_Dir    use "../build/bin";
+   for Main        use ("test_runner.adb");
+   
+   -- NAMING CONFIGURATION
+   package Builder is
+      for Executable ("test_runner.adb") use "test_runner";
+   end Builder;
+
+   -- COMPILER CONFIGURATION
+   package Compiler is
+      -- Tests always run with assertions enabled (-gnata) and debug info (-g)
+      for Default_Switches ("Ada") use (
+         "-gnat2022",
+         "-O0",
+         "-g",
+         "-gnata",   -- Assertions enabled
+         "-gnatwa",  -- Enable all warnings
+         "-gnaty"    -- Style checks
+      );
+   end Compiler;
+
+   -- BINDER CONFIGURATION
+   package Binder is
+      for Default_Switches ("Ada") use ("-Es");
+   end Binder;
+
+end MakeOps_Tests;

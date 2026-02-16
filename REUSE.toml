@@ -1,0 +1,13 @@
+# REUSE-Specification-Version: 3.3
+# SPDX-FileCopyrightText: 2026 Marcin Kaim
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+version = 1
+
+[[annotations]]
+path = [
+    ".gitignore",
+    "README.md",
+]
+SPDX-FileCopyrightText = "Copyright (C) 2026 Marcin Kaim"
+SPDX-License-Identifier = "GPL-3.0-or-later"

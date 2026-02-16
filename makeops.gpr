@@ -1,0 +1,15 @@
+--------------------------------------------------------------------------------
+--  MakeOps
+--  Copyright (C) 2026 Marcin Kaim
+--  SPDX-License-Identifier: GPL-3.0-or-later
+--------------------------------------------------------------------------------
+
+aggregate project MakeOps is
+   
+   for Project_Files use (
+      "source/makeops_app.gpr",
+      "source/makeops_tests.gpr");
+
+   for External ("BUILD_MODE") use external ("BUILD_MODE", "dev");
+
+end MakeOps;

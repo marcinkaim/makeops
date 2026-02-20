@@ -3,14 +3,16 @@
 
 # MakeOps
 
-**MakeOps** is a deterministic DevOps task runner designed to orchestrate complex project operations with mathematical precision. Inspired by the utility of GNU Make, MakeOps modernizes the concept by separating configuration from logic.
+**MakeOps** (executable: `mko`) is a deterministic DevOps task runner designed to orchestrate complex project operations with mathematical precision. Inspired by the utility of GNU Make, MakeOps modernizes the concept by separating configuration from logic.
 
-Instead of embedding shell scripts, MakeOps defines tasks, dependencies, and execution arguments in a strictly typed `makeops.toml` configuration file. It constructs a directed acyclic graph (DAG) of dependencies to execute tasks in the correct order, ensuring a reliable and reproducible operational environment.
+Instead of embedding shell scripts, MakeOps defines operations, dependencies, and execution arguments in a strictly typed `makeops.toml` configuration file. It constructs a directed acyclic graph (DAG) of dependencies to execute operations in the correct order, ensuring a reliable and reproducible operational environment.
 
 **Key Features:**
-* **Dependency Resolution:** Automatically resolves and executes task chains defined in `[tasks.TASK_NAME]` sections.
-* **Pure Execution:** Disallows embedded shell scripting to enforce security and clarity; executes explicit binaries and scripts with strict argument passing.
-* **Configuration Logic:** Supports variable substitution (`${VAR_NAME}`) via a dedicated `[vars]` section.
+* **Dependency Resolution:** Automatically resolves and executes operation chains defined in discrete `[operations.<name>]` sections.
+* **Pure Execution:** Disallows embedded shell scripting to enforce security and clarity; executes explicit binaries (`cmd`) with strictly passed argument arrays (`args`).
+* **Configuration Logic:** Supports dynamic variable substitution (`${VAR_NAME}`) via a centralized `[environment]` section.
+* **Execution Observability:** Provides standard POSIX exit codes, real-time process streaming, and granular control over standard streams via deterministic logging levels (`--quiet`, `normal`, `--verbose`).
+* **Global Preferences:** Adheres to native Linux standards, allowing system-wide (`/etc/makeops/config.toml`) and user-specific (`~/.config/makeops/config.toml`) default configurations.
 
 ## 🚀 Technology Stack
 

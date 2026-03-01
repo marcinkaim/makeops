@@ -28,7 +28,7 @@
 * **F-001-006:** The system SHALL provide a mechanism (e.g., via a CLI argument) for the user to specify an alternative path to the configuration file.
 
 ## 3. System Constraints & Quality Attributes (NFRs)
-* **NFR-001-001 (Format Compatibility):** The underlying parsing mechanism MUST strictly interpret the configuration file as a predefined subset of the TOML format.
+* **NFR-001-001 (Format Compatibility):** The underlying parsing mechanism MUST strictly interpret the configuration file according to the highly restricted "MakeOps TOML Dialect", explicitly rejecting complex data types (integers, booleans, dates) in favor of raw strings to maintain formal verification constraints (defined in `PLAT-013`).
 * **NFR-001-002 (Dependency Integrity):** The system MUST strictly enforce acyclic relationships; it MUST reject the configuration if cyclical dependencies are defined by the user.
 * **NFR-001-003 (Stream Processing):** The core parsing logic MUST operate on an abstracted text stream rather than hardcoded file paths, allowing the application layer to manage file I/O operations.
 

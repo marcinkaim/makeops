@@ -11,7 +11,7 @@ Instead of embedding shell scripts, MakeOps defines operations, dependencies, an
 * **Dependency Resolution:** Automatically resolves and executes operation chains defined in discrete `[operations.<name>]` sections.
 * **Pure Execution:** Disallows embedded shell scripting to enforce security and clarity; executes explicit binaries (`cmd`) with strictly passed argument arrays (`args`).
 * **Configuration Logic:** Supports dynamic variable substitution (`${VAR_NAME}`) via a centralized `[environment]` section.
-* **Execution Observability:** Provides standard POSIX exit codes, real-time process streaming, and granular control over standard streams via deterministic logging levels (`--quiet`, `normal`, `--verbose`).
+* **Execution Observability:** Provides standard POSIX exit codes, real-time process streaming, and granular control over standard streams via deterministic logging levels (`--log-level error`, `info`, `debug`).
 * **Global Preferences:** Adheres to native Linux standards, allowing system-wide (`/etc/makeops/config.toml`) and user-specific (`~/.config/makeops/config.toml`) default configurations.
 
 ## 🚀 Technology Stack

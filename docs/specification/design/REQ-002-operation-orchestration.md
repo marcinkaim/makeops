@@ -23,7 +23,7 @@
 * **F-002-001:** The system SHALL accept a target operation name from the user as a trigger for execution.
 * **F-002-002:** The system SHALL automatically resolve and execute all prerequisite operations defined in the `deps` arrays prior to executing the target operation.
 * **F-002-003:** The system SHALL ensure that any given operation within the dependency chain is executed exactly once per run, even if multiple operations depend on it.
-* **F-002-004:** The system SHALL dynamically substitute declared environment variables (e.g., `${VAR_NAME}`) within the operation's `args` definitions immediately prior to execution.
+* **F-002-004:** The system SHALL dynamically substitute declared environment variables (e.g., `${VAR_NAME}`) within the operation's `cmd` and `args` definitions for the entire resolved execution queue prior to spawning any processes, ensuring a "Fail-Fast" behavior for missing or circular variables.
 * **F-002-005:** The system SHALL immediately halt the execution sequence if any invoked operation returns a non-zero exit code.
 
 ## 3. System Constraints & Quality Attributes (NFRs)

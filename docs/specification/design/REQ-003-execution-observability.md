@@ -21,21 +21,21 @@
 
 ## 2. Functional Requirements (Behavior)
 * **F-003-001:** The system SHALL provide a Command Line Interface (CLI) that accepts operational targets and configuration flags as arguments to the `mko` executable.
-* **F-003-002:** The system SHALL allow the user to control the logging output via CLI flags that map to the internal `Verbosity_Level` configuration defined in the `makeops-app.ads` package.
+* **F-003-002:** The system SHALL allow the user to control the logging output via CLI flags that map to the internal `Log_Level` configuration defined in the `makeops-app.ads` package.
 * **F-003-003:** The system SHALL route standard informational messages to `stdout` and all warning, error, or diagnostic messages strictly to `stderr`.
 * **F-003-004:** The system SHALL report the final outcome of the execution graph to the operating system using standard POSIX exit codes (e.g., `Exit_Success` or `Exit_Failure`) defined in the `makeops-app.ads` package.
-* **F-003-005:** The system SHALL prefix its own diagnostic logs with a consistent identifier (e.g., `[makeops]`) to distinguish its output from the output of the spawned child processes.
-* **F-003-006 (Normal Level):** By default, the system SHALL output basic operational progress (e.g., starting an operation, success status) and stream both `stdout` and `stderr` of child processes directly to the user.
-* **F-003-007 (Quiet Level):** When activated (e.g., via `--quiet`), the system SHALL suppress all internal MakeOps informational output and hide the `stdout` of child processes, permitting only critical system errors and child process `stderr` streams to be displayed.
-* **F-003-008 (Verbose Level):** When activated (e.g., via `--verbose`), the system SHALL emit detailed internal diagnostic information (such as DAG resolution steps, exact command strings with resolved arguments) while fully streaming both `stdout` and `stderr` of child processes.
+* **F-003-005:** The system SHALL prefix its own diagnostic logs with a consistent semantic identifier (e.g., `[mko:info]`, `[mko:error]`, `[mko:run]`) to distinguish its output from the output of the spawned child processes and indicate the nature of the message.
+* **F-003-006 (Info Level):** By default, the system SHALL output basic operational progress (e.g., starting an operation, success status) and stream both `stdout` and `stderr` of child processes directly to the user.
+* **F-003-007 (Error Level):** When activated (e.g., via `--log-level error`), the system SHALL suppress all internal MakeOps informational output and hide the `stdout` of child processes, permitting only critical system errors and child process `stderr` streams to be displayed.
+* **F-003-008 (Debug Level):** When activated (e.g., via `--log-level debug`), the system SHALL emit detailed internal diagnostic information (such as DAG resolution steps, exact command strings with resolved arguments) while fully streaming both `stdout` and `stderr` of child processes.
 
 ## 3. System Constraints & Quality Attributes (NFRs)
-* **NFR-003-001 (Transparency):** For any streams permitted by the current verbosity level, the system MUST output the standard output and standard error of executed child processes directly to the terminal in real-time, preventing output buffering that could obscure hanging processes.
+* **NFR-003-001 (Transparency):** For any streams permitted by the current log level, the system MUST output the standard output and standard error of executed child processes directly to the terminal in real-time, preventing output buffering that could obscure hanging processes.
 * **NFR-003-002 (Non-Interference):** The logging mechanism MUST NOT significantly degrade the performance of the underlying execution engine (`REQ-002`).
 
 ## 4. Input / Output Data Model
 * **Inputs:**
-    * CLI arguments defining the desired verbosity (e.g., `--verbose`, `--quiet`).
+    * CLI arguments defining the desired logging level (e.g., `--log-level debug`, `--log-level error`).
     * Real-time state updates and process streams from the execution engine (`REQ-002`).
 * **Outputs:**
     * Formatted text output to `stdout` and `stderr`.
@@ -44,6 +44,6 @@
 ## 5. Acceptance Criteria (Definition of Done)
 * **AC-003-001:** Invoking `mko` with a target that completes successfully prints the success status and terminates with the `Exit_Success` code.
 * **AC-003-002:** Invoking `mko` with a target that fails terminates the MakeOps execution immediately, flushes the child process error to `stderr`, and returns an `Exit_Failure` code to the OS.
-* **AC-003-003:** Providing a `--verbose` flag (or similar mechanism) successfully alters the internal `Verbosity_Level` and causes the system to emit additional debugging information (e.g., parsing steps, DAG resolution).
+* **AC-003-003:** Providing a `--log-level debug` flag (or similar mechanism) successfully alters the internal `Log_Level` and causes the system to emit additional debugging information (e.g., parsing steps, DAG resolution).
 * **AC-003-004:** The output of child processes (e.g., the output of `gprbuild`) is visibly printed to the terminal without artificial delays while the process is still running.
-* **AC-003-005:** Invoking `mko` with the `--quiet` flag ensures that no standard informational output from MakeOps and no `stdout` from child processes is printed, validating the Quiet mode constraints.
+* **AC-003-005:** Invoking `mko` with the `--log-level error` flag ensures that no standard informational output from MakeOps and no `stdout` from child processes is printed, validating the Error mode constraints.

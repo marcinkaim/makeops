@@ -22,7 +22,7 @@ package MakeOps.App is
    Exit_Success : constant Exit_Code := 0;
    Exit_Failure : constant Exit_Code := 1;
 
-   --  Global verbosity settings for the user interface.
-   type Verbosity_Level is (Silent, Normal, Verbose, Debug);
+   --  Global logging level settings for the user interface.
+   type Log_Level is (Error, Info, Debug);
 
 end MakeOps.App;

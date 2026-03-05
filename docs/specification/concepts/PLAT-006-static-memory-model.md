@@ -28,7 +28,7 @@ To avoid dynamic types like `Ada.Strings.Unbounded.Unbounded_String` or dynamic 
 Furthermore, the use of memory pointers (access types in Ada) is forbidden. Pointers introduce aliasing, which complicates formal verification and can lead to memory leaks or cyclic references. Instead, relationships within data structures (such as edges in the Directed Acyclic Graph) are implemented using pure array indices (integers).
 
 ### 2.3. Architectural Constraints (Platform Limits)
-Since all types must be bounded, the system establishes predefined limits that generously cover standard DevOps use cases while maintaining a deterministic memory footprint:
+Since all types must be bounded, the system establishes predefined limits that generously cover standard DevOps use cases while maintaining a deterministic memory footprint. To adhere to High Cohesion, these limits and their associated bounded string types MUST be declared spatially close to the domains they govern (e.g., within specific `MakeOps.Sys.*` adapter packages) rather than in a central monolithic package:
 * `Max_Operations`: 64 (Maximum number of operations in a single `makeops.toml` graph).
 * `Max_Command_Length`: 256 bytes (Maximum physical length of the `cmd` binary path).
 * `Max_Args_Per_Command`: 32 (Maximum number of arguments per execution).

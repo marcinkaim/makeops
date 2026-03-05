@@ -50,11 +50,11 @@ package body MakeOps.Tests.Base is
       pragma Unreferenced (T);
    begin
       Assert (
-         MakeOps.App.Exit_Success = 0,
-         "Exit_Success must strictly be 0 (POSIX)");
+         MakeOps.App.Error < MakeOps.App.Info,
+         "Error level must be less than Info level");
       Assert (
-         MakeOps.App.Exit_Failure /= 0,
-         "Exit_Failure must indicate an error");
+         MakeOps.App.Info < MakeOps.App.Debug,
+         "Info level must be less than Debug level");
    end Test_MakeOps_App;
 
    procedure Test_MakeOps_Core (T : in out AUnit.Test_Cases.Test_Case'Class) is
@@ -69,10 +69,20 @@ package body MakeOps.Tests.Base is
       pragma Unreferenced (T);
       Dummy_Code : MakeOps.Sys.System_Error_Code;
    begin
-      Dummy_Code := 1; -- Should hold positive POSIX errno like EPERM (1)
+      Dummy_Code := 1;
+
+      --  Should hold positive POSIX errno like EPERM (1)
       Assert (
          Dummy_Code > 0,
          "System_Error_Code can hold positive integer bounds");
+
+      --  POSIX Exit Codes mapped in Sys layer
+      Assert (
+         MakeOps.Sys.Exit_Success = 0,
+         "Exit_Success must strictly be 0 (POSIX)");
+      Assert (
+         MakeOps.Sys.Exit_Failure /= 0,
+         "Exit_Failure must indicate an error");
    end Test_MakeOps_Sys;
 
 end MakeOps.Tests.Base;

@@ -80,7 +80,8 @@ The following is a structured definition of the Contextual Error Rendering algor
 
 ## 3. Engineering Impact
 
-* **Constraints:** * The rendering engine MUST strictly output all of its formatted text to `Ada.Text_IO.Current_Error` (`stderr`), ensuring that standard output (`stdout`) remains unpolluted by MakeOps diagnostics.
+* **Constraints:**
+  * The rendering engine MUST strictly output all of its formatted text using the safe `MakeOps.Sys.Terminal` facade targeting `Standard_Error` (`stderr`). This ensures that standard output (`stdout`) remains unpolluted by MakeOps diagnostics while preventing native `Ada.Text_IO` exceptions from leaking into the core logic.
   * The engine MUST safely handle edge cases during the second file read (e.g., if the user deleted or modified the `makeops.toml` file in the millisecond window between parsing and error reporting). In such cases, the engine MUST gracefully degrade to printing the basic error message and coordinates without the visual code snippet, avoiding an unhandled `Name_Error` or `End_Error`.
 * **Performance Risks:** None. The secondary file read occurs exclusively on the fatal termination path. The CPU and I/O cost of re-reading a typical DevOps configuration file (which rarely exceeds a few hundred lines) is computationally invisible to the user.
 * **Opportunities:** This approach mimics the highly praised Developer Experience (DX) of modern programming languages (like Rust or Elm), elevating MakeOps from a simple task runner to a highly polished, professional development tool while remaining completely loyal to the Deep Tech / Zero-Dependency philosophy.

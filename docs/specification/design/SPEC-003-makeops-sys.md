@@ -24,8 +24,10 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-000` (System constraints and POSIX OS boundaries).
+    * `REQ-000` (F-000-001: Standard POSIX exit codes and system constraints).
+    * `REQ-003` (F-003-004: Execution exit status).
 * **Applies Concepts:**
+    * `PLAT-003` (System Signal Routing and Exit Codes).
     * `PLAT-004` (Linux Environment and FS Adapters: Exception Isolation).
     * `PLAT-005` (SPARK Formal Verification: Reserving native exceptions purely for fatal, unrecoverable aborts outside the SPARK boundary).
 * **Internal Package Dependencies:** None. This is the foundation of the OS boundary subsystem.
@@ -35,6 +37,9 @@
 * **Core Types & State:**
     * `System_Error`: A native Ada exception. It represents a catastrophic, unrecoverable failure originating from the OS or kernel (e.g., hardware fault, complete memory exhaustion). 
     * `System_Error_Code`: An integer type designed to map directly to standard Linux `errno` values, allowing child packages to propagate specific kernel diagnostics if needed.
+    * `Exit_Code`: A distinct integer type mapping to POSIX system exit statuses.
+    * `Exit_Success`: A static constant representing successful termination (POSIX `0`).
+    * `Exit_Failure`: A static constant representing generic failure termination (POSIX `1`).
 * **Main Subprograms:**
     * None.
 * **Invariants & Contracts (Conceptual):**

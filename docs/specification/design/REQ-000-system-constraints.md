@@ -22,7 +22,7 @@
 ## 2. Functional Requirements (Behavior)
 *Since this is a global constraints document, functional behaviors are limited to the most general rules of system interaction with the target platform.*
 
-* **F-000-001:** The system SHALL communicate with the operating system through standard exit codes (e.g., `Exit_Success`, `Exit_Failure`) defined in the `makeops-app.ads` package.
+* **F-000-001:** The system SHALL communicate with the operating system through standard exit codes (e.g., `Exit_Success`, `Exit_Failure`) defined in the `makeops-sys.ads` package.
 * **F-000-002:** The system SHALL execute operations via explicit binary and script invocations with strictly passed arguments, without utilizing embedded shell scripts.
 
 ## 3. System Constraints & Quality Attributes (NFRs)

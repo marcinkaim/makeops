@@ -132,7 +132,7 @@ The following is a structured definition of the Master Orchestration Pipeline.
 * [2] [ALG-001: Topological Sorting and Cycle Detection](./ALG-001-topological-sort.md)
 * [3] [ALG-002: Lazy Variable Substitution](./ALG-002-lazy-variable-substitution.md)
 * [4] [ALG-008: Real-Time I/O Multiplexing Loop](./ALG-008-io-multiplexing-loop.md)
-* [5] [PLAT-004: Environment and FS Adapters](./PLAT-004-environment-and-fs-adapters.md)
+* [5] [PLAT-004: OS Boundary Facades and Exception Isolation](./PLAT-004-isolated-os-boundaries.md)
 * [6] [PLAT-006: Static Memory Model](./PLAT-006-static-memory-model.md)
 * [7] [PLAT-007: Execution Context Model](./PLAT-007-execution-context-model.md)
 * [8] [ALG-010: Contextual Error Rendering](./ALG-010-contextual-error-rendering.md)

@@ -23,7 +23,7 @@
 * **F-003-001:** The system SHALL provide a Command Line Interface (CLI) that accepts operational targets and configuration flags as arguments to the `mko` executable.
 * **F-003-002:** The system SHALL allow the user to control the logging output via CLI flags that map to the internal `Log_Level` configuration defined in the `makeops-app.ads` package.
 * **F-003-003:** The system SHALL route standard informational messages to `stdout` and all warning, error, or diagnostic messages strictly to `stderr`.
-* **F-003-004:** The system SHALL report the final outcome of the execution graph to the operating system using standard POSIX exit codes (e.g., `Exit_Success` or `Exit_Failure`) defined in the `makeops-app.ads` package.
+* **F-003-004:** The system SHALL report the final outcome of the execution graph to the operating system using standard POSIX exit codes (e.g., `Exit_Success` or `Exit_Failure`) defined in the `makeops-sys.ads` package.
 * **F-003-005:** The system SHALL prefix its own diagnostic logs with a consistent semantic identifier (e.g., `[mko:info]`, `[mko:error]`, `[mko:run]`) to distinguish its output from the output of the spawned child processes and indicate the nature of the message.
 * **F-003-006 (Info Level):** By default, the system SHALL output basic operational progress (e.g., starting an operation, success status) and stream both `stdout` and `stderr` of child processes directly to the user.
 * **F-003-007 (Error Level):** When activated (e.g., via `--log-level error`), the system SHALL suppress all internal MakeOps informational output and hide the `stdout` of child processes, permitting only critical system errors and child process `stderr` streams to be displayed.

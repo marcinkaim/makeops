@@ -15,28 +15,22 @@
 
 ## 1. Scope & Responsibility
 
-* **Goal:** Serves as the root namespace for the Application Layer and defines foundational types and constants representing the global application state and OS interface boundaries.
+* **Goal:** Serves as the root namespace for the Application Layer and defines foundational types representing the global application state and user interface configuration.
 * **Responsibility:**
-    * Defines standard POSIX exit codes to be returned to the operating system upon termination.
     * Defines the visual verbosity levels (logging levels) used across the application.
 * **Out of Scope:** This package strictly defines types and constants. It does not contain the logic for the CLI parser (`MakeOps.App.CLI`) nor the implementation of the logging mechanisms (`MakeOps.App.Logging`).
 
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-000` (F-000-001: Standard POSIX exit codes).
-    * `REQ-003` (F-003-002, F-003-004: Execution observability, logging levels, and exit status).
+    * `REQ-003` (F-003-002: Execution observability and logging levels).
 * **Applies Concepts:**
-    * `PLAT-003` (System Signal Routing and Exit Codes).
     * `PLAT-012` (Logging and DX Model).
 * **Internal Package Dependencies:** None. This is the foundation of the App subsystem.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * `Exit_Code`: A distinct integer type mapping to POSIX system exit statuses.
-    * `Exit_Success`: A static constant representing successful termination (POSIX `0`).
-    * `Exit_Failure`: A static constant representing generic failure termination (POSIX `1`).
     * `Log_Level`: An enumeration defining the diagnostic output granularity. Strictly limited to `Error`, `Info`, and `Debug`.
 * **Main Subprograms:**
     * None.
@@ -51,4 +45,4 @@
 
 * **Static Proof (GNATprove):** Automatically proven. The declarations contain no complex logic or dynamic bounds, satisfying Absence of Runtime Errors (AoRE).
 * **AUnit Test Scenarios:**
-    * **Happy Path:** A trivial sanity test ensuring that `Exit_Success` equals `0` and `Exit_Failure` does not equal `0`, preserving POSIX compliance.
+    * **Happy Path:** A trivial sanity test ensuring that the `Log_Level` enumeration is ordered correctly (e.g., `Error < Info` and `Info < Debug`) to support relational comparisons in logging and output filtering logic.

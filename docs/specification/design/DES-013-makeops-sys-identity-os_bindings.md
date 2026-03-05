@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-013 MakeOps.Sys.Identity.OS_Bindings Package Specification
+# DES-013 MakeOps.Sys.Identity.OS_Bindings Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-013` |
+| **Document ID** | `DES-013` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-04 |
 | **Target Package** | `MakeOps.Sys.Identity.OS_Bindings` |

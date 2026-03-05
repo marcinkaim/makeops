@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-014 MakeOps.Sys.Time Package Specification
+# DES-014 MakeOps.Sys.Time Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-014` |
+| **Document ID** | `DES-014` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-04 |
 | **Target Package** | `MakeOps.Sys.Time` |

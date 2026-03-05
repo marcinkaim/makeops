@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-015 MakeOps.Sys.File_Stream Package Specification
+# DES-015 MakeOps.Sys.File_Stream Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-015` |
+| **Document ID** | `DES-015` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-05 |
 | **Target Package** | `MakeOps.Sys.File_Stream` |

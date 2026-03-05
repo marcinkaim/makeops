@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-010 MakeOps.Sys.Terminal Package Specification
+# DES-010 MakeOps.Sys.Terminal Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-010` |
+| **Document ID** | `DES-010` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-04 |
 | **Target Package** | `MakeOps.Sys.Terminal` |

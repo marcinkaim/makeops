@@ -24,19 +24,19 @@ package body MakeOps.Tests.Base is
       Register_Routine (
          T,
          Test_MakeOps'Access,
-         "SPEC-000: MakeOps Identity constraints");
+         "DES-000: MakeOps Identity constraints");
       Register_Routine (
          T,
          Test_MakeOps_App'Access,
-         "SPEC-001: App Exit Codes and Log Levels");
+         "DES-001: App Exit Codes and Log Levels");
       Register_Routine (
          T,
          Test_MakeOps_Core'Access,
-         "SPEC-002: Core Types Sanity");
+         "DES-002: Core Types Sanity");
       Register_Routine (
          T,
          Test_MakeOps_Sys'Access,
-         "SPEC-003: Sys Error Code Bounds");
+         "DES-003: Sys Error Code Bounds");
    end Register_Tests;
 
    procedure Test_MakeOps (T : in out AUnit.Test_Cases.Test_Case'Class) is

@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-007 MakeOps.Sys.FS.OS_Bindings Package Specification
+# DES-007 MakeOps.Sys.FS.OS_Bindings Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-007` |
+| **Document ID** | `DES-007` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-03 |
 | **Target Package** | `MakeOps.Sys.FS.OS_Bindings` |

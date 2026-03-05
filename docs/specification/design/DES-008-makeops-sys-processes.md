@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-008 MakeOps.Sys.Processes Package Specification
+# DES-008 MakeOps.Sys.Processes Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-008` |
+| **Document ID** | `DES-008` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-03 |
 | **Target Package** | `MakeOps.Sys.Processes` |

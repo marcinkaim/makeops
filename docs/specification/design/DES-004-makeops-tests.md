@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-004 MakeOps.Tests Package Specification
+# DES-004 MakeOps.Tests Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-004` |
+| **Document ID** | `DES-004` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-02 |
 | **Target Package** | `MakeOps.Tests` |

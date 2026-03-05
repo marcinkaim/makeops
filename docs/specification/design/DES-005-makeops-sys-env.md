@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-005 MakeOps.Sys.Env Package Specification
+# DES-005 MakeOps.Sys.Env Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-005` |
+| **Document ID** | `DES-005` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-03 |
 | **Target Package** | `MakeOps.Sys.Env` |

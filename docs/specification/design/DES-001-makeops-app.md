@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-001 MakeOps.App Package Specification
+# DES-001 MakeOps.App Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-001` |
+| **Document ID** | `DES-001` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-02 |
 | **Target Package** | `MakeOps.App` |

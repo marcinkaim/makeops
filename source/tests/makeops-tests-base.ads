@@ -13,7 +13,7 @@ package MakeOps.Tests.Base is
    procedure Register_Tests (T : in out Test_Case);
    function Name (T : Test_Case) return AUnit.Message_String;
 
-   --  Test routines mapped to SPEC validation strategies
+   --  Test routines mapped to DES validation strategies
    procedure Test_MakeOps (T : in out AUnit.Test_Cases.Test_Case'Class);
    procedure Test_MakeOps_App (T : in out AUnit.Test_Cases.Test_Case'Class);
    procedure Test_MakeOps_Core (T : in out AUnit.Test_Cases.Test_Case'Class);

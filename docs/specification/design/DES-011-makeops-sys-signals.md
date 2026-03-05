@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-011 MakeOps.Sys.Signals Package Specification
+# DES-011 MakeOps.Sys.Signals Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-011` |
+| **Document ID** | `DES-011` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-04 |
 | **Target Package** | `MakeOps.Sys.Signals` |

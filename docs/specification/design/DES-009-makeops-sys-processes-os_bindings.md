@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-009 MakeOps.Sys.Processes.OS_Bindings Package Specification
+# DES-009 MakeOps.Sys.Processes.OS_Bindings Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-009` |
+| **Document ID** | `DES-009` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-03 |
 | **Target Package** | `MakeOps.Sys.Processes.OS_Bindings` |

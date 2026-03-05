@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-006 MakeOps.Sys.FS Package Specification
+# DES-006 MakeOps.Sys.FS Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-006` |
+| **Document ID** | `DES-006` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-03 |
 | **Target Package** | `MakeOps.Sys.FS` |

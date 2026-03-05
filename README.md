@@ -76,7 +76,7 @@ We believe that understanding precedes specification. Before defining *how* the 
 * **Location:** `specification/concepts`
 
 ### 2. Specification-Driven Development (SDD)
-Code is a liability; specification is an asset. We write normative Requirements (`REQ`) and Technical Specifications (`SPEC`) before writing the implementation. This separates the **Design Phase** from the **Coding Phase**.
+Code is a liability; specification is an asset. We write normative Requirements (`REQ`) and Package Designs (`DES`) before writing the implementation. This separates the **Design Phase** from the **Coding Phase**.
 * **Outcome:** Verifiable requirements and architecture definitions.
 * **Location:** `specification/design`
 
@@ -92,7 +92,7 @@ The repository follows a strict separation of concerns, distinguishing between t
 │   ├── manual/                 # End-user guides and manuals
 │   └── specification/          # The Knowledge Base and Specifications
 │       ├── concepts/           # Theoretical Basis: Math, Algorithms (ALG), Platform Constraints (PLAT)
-│       └── design/             # Normative Specs: Requirements (REQ), Specifications (SPEC)
+│       └── design/             # Normative Specs: Requirements (REQ), Package Designs (DES)
 ├── LICENSES/                   # License texts (REUSE compliance)
 ├── source/                     # Source Code (Ada 2022)
 │   ├── app/                    # Application Entry Point & CLI Drivers

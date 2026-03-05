@@ -4,11 +4,11 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# SPEC-002 MakeOps.Core Package Specification
+# DES-002 MakeOps.Core Package Design
 
 | Attribute | Value |
 | :--- | :--- |
-| **Document ID** | `SPEC-002` |
+| **Document ID** | `DES-002` |
 | **Status** | `APPROVED` |
 | **Date** | 2026-03-02 |
 | **Target Package** | `MakeOps.Core` |

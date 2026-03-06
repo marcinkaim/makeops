@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 --  MakeOps
 --  Copyright (C) 2026 Marcin Kaim
 --  SPDX-License-Identifier: GPL-3.0-or-later
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 project MakeOps_App is
 
@@ -75,5 +75,9 @@ project MakeOps_App is
             null;
       end case;
    end Linker;
+
+   package Pretty_Printer is
+      for Default_Switches ("Ada") use ("-M79");
+   end Pretty_Printer;
 
 end MakeOps_App;

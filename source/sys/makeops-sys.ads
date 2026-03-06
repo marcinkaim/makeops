@@ -18,7 +18,7 @@ package MakeOps.Sys is
    --  with C or hardware, preparing data structures at link-time.
    pragma Preelaborate;
 
-      --  Standard POSIX-compliant exit codes.
+   --  Standard POSIX-compliant exit codes.
    type Exit_Code is new Integer;
    Exit_Success : constant Exit_Code := 0;
    Exit_Failure : constant Exit_Code := 1;

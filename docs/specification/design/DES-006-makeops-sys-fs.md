@@ -28,25 +28,22 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-004` (Global Tool Preferences: reading `/etc/` and `~/.config/`).
     * `REQ-002` (Operation Orchestration: pre-flight checks before process spawning).
 * **Applies Concepts:**
     * `PLAT-004` (Linux Environment and FS Adapters: XDG standard and Graceful Degradation).
     * `PLAT-005` (SPARK Formal Verification: Translating native exceptions to status enums).
     * `PLAT-007` (Execution Context Model: Path Translation Heuristic and Configuration Anchor).
-* **Internal Package Dependencies:**
-    * `MakeOps.Sys.Env` (to query `$XDG_CONFIG_HOME` and `$HOME` internally for path resolution).
+* **Internal Package Dependencies:** None. This is the foundation of the OS boundary subsystem.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * `Max_Command_Length`: A static constant (256) defining the maximum byte length of a file path or executable command (from `PLAT-006`).
+    * `Max_Command_Length`: A static constant (4096) defining the maximum byte length of a file path or executable command (from `PLAT-006`).
     * `Path_String`: A bounded string type (capacity `Max_Command_Length`) for storing file system paths and commands.
     * `FS_Status`: An enumeration (`Success`, `Not_Found`, `Permission_Denied`) representing the deterministic outcome of file system queries.
 * **Main Subprograms:**
     * `Check_File_Access`: A function accepting a path (bounded string) and returning `FS_Status`. Used by the Configuration Cascade to safely probe optional preference files.
     * `Is_Executable`: A function accepting a path and returning a `Boolean`. Used by the Master Orchestration Pipeline as a pre-flight check before calling `execvp`.
-    * `Resolve_User_Config_Path`: A function returning the absolute path to the user's global `config.toml` by evaluating XDG variables.
     * `Change_Directory`: A function accepting a path (bounded string) and returning `FS_Status`. Used during CLI initialization to set the execution context.
     * `Get_Current_Directory`: A function returning the absolute path (`Path_String`) of the current working directory.
     * `Get_Absolute_Directory_Path`: A function accepting a file path and returning the absolute path (`Path_String`) to its parent directory. Used to establish the Configuration Anchor.
@@ -57,11 +54,10 @@
 
 * **Implementation Scope:** The package body (`.adb`) MUST be marked with `pragma SPARK_Mode (Off)`.
 * **OS / Standard Library Interactions:**
-    * Use `Ada.Directories` to implement `Check_File_Access`. Wrap calls in exception blocks trapping `Name_Error` and `Use_Error`.
+    * To implement `Check_File_Access`, use a Thin Binding to the POSIX C function `access(path, mode)` with constants `F_OK` and `R_OK` to guarantee accurate existence and read permission resolution under Linux, cleanly distinguishing between `Not_Found` and `Permission_Denied`.
     * To implement `Is_Executable`, Ada's standard library may lack direct POSIX execution permission checks. It is acceptable and recommended to use a Thin Binding to the POSIX C function `access(path, X_OK)` to guarantee accurate permission resolution under Linux.
     * To implement `Change_Directory`, use the Thin Binding to the POSIX C function `chdir(path)`. Map the integer return code to `FS_Status`.
     * To implement `Get_Current_Directory` and `Get_Absolute_Directory_Path`, use the Thin Bindings to the POSIX C functions `getcwd` and `realpath` respectively.
-* **XDG Resolution Logic:** Query `MakeOps.Sys.Env.Get("XDG_CONFIG_HOME")`. If `Not_Found` or empty, query `HOME` and append `/.config/makeops/config.toml`.
 
 ## 5. Verification Strategy
 

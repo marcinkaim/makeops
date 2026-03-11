@@ -30,12 +30,12 @@ Furthermore, the use of memory pointers (access types in Ada) is forbidden. Poin
 ### 2.3. Architectural Constraints (Platform Limits)
 Since all types must be bounded, the system establishes predefined limits that generously cover standard DevOps use cases while maintaining a deterministic memory footprint. To adhere to High Cohesion, these limits and their associated bounded string types MUST be declared spatially close to the domains they govern (e.g., within specific `MakeOps.Sys.*` adapter packages) rather than in a central monolithic package:
 * `Max_Operations`: 64 (Maximum number of operations in a single `makeops.toml` graph).
-* `Max_Command_Length`: 256 bytes (Maximum physical length of the `cmd` binary path).
+* `Max_Command_Length`: 4096 bytes (Maximum physical length of the `cmd` binary path).
 * `Max_Args_Per_Command`: 32 (Maximum number of arguments per execution).
 * `Max_Arg_Length`: 1024 bytes (Maximum physical length of a single evaluated argument).
 * `Max_Env_Vars`: 64 (Maximum number of environment variables declared).
 * `Max_Env_Var_Name_Length`: 64 bytes (Maximum physical length of an environment variable key).
-* `Max_Env_Var_Value_Length`: 1024 bytes (Maximum physical length of an environment variable value).
+* `Max_Env_Var_Value_Length`: 32768 bytes (Maximum physical length of an environment variable value).
 
 ## 3. Engineering Impact
 * **Constraints:** Developers MUST use `Ada.Strings.Bounded` instead of unbounded variants. The `new` keyword and access types MUST NOT be used for data structures. State mutating procedures MUST explicitly declare their impact on package-level variables using SPARK `Global` and `Depends` contracts.

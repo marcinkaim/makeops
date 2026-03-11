@@ -13,10 +13,20 @@
 --  codes.
 -------------------------------------------------------------------------------
 
+with Ada.Strings.Bounded;
+
 package MakeOps.Sys is
    --  Preelaborate is standard for packages that may eventually interface
    --  with C or hardware, preparing data structures at link-time.
    pragma Preelaborate;
+
+   --  Maximum physical byte length of a file path or executable command
+   Max_Command_Length : constant := 4096;
+
+   --  Bounded string type for storing file system paths and commands
+   package Path_Strings is new
+     Ada.Strings.Bounded.Generic_Bounded_Length (Max => Max_Command_Length);
+   subtype Path_String is Path_Strings.Bounded_String;
 
    --  Standard POSIX-compliant exit codes.
    type Exit_Code is new Integer;

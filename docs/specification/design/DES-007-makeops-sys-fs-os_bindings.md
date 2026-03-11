@@ -18,8 +18,8 @@
 * **Goal:** Serves as the raw, unsafe Thin Binding layer to the Linux kernel and `glibc` strictly for low-level file system metadata and access queries.
 * **Responsibility:**
     * Maps POSIX C data types (e.g., `int`, `char*`) to Ada equivalents using `Interfaces.C`.
-    * Defines POSIX constants related to file access modes (e.g., the `X_OK` execution permission flag).
-    * Imports native C functions via `pragma Import` (specifically `access`, `chdir`, `getcwd`, and `realpath`).
+    * Defines POSIX constants related to file access modes (specifically `F_OK` for existence checks, `R_OK` for read permissions, and `X_OK` for execution permissions).
+    * Imports native C functions via `pragma Import` (specifically `access`, `chdir`, `getcwd`, and `realpath`)
 * **Out of Scope:** This package strictly excludes any business logic, error handling, or exception translation. It does not evaluate XDG environment variables or concatenate paths. Process lifecycle bindings belong to `MakeOps.Sys.Processes.OS_Bindings`.
 
 ## 2. Traceability & Dependencies

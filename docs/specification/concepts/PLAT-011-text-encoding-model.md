@@ -35,7 +35,7 @@ Because UTF-8 characters can span up to 4 bytes, there is a fundamental disconne
 
 ## 3. Engineering Impact
 
-* **Constraints:** All system limits defined in the Static Memory Model (`PLAT-006`)—such as `Max_Command_Length` (256) or `Max_Arg_Length` (1024)—MUST be strictly interpreted as **maximum byte limits**, not maximum character limits. Developers MUST NOT use native string-manipulation functions that alter the casing (e.g., `To_Upper`) or reverse the string sequence on user-defined text, as these operations would corrupt multi-byte UTF-8 sequences.
+* **Constraints:** All system limits defined in the Static Memory Model (`PLAT-006`)—such as `Max_Command_Length` or `Max_Arg_Length`—MUST be strictly interpreted as **maximum byte limits**, not maximum character limits. Developers MUST NOT use native string-manipulation functions that alter the casing (e.g., `To_Upper`) or reverse the string sequence on user-defined text, as these operations would corrupt multi-byte UTF-8 sequences.
 * **Performance Risks:** None. By explicitly avoiding the `Ada.Wide_Wide_Text_IO` and `Wide_Wide_String` packages, the system avoids $O(N)$ string conversion overheads and prevents a $4\times$ memory bloat in the static data segments.
 * **Opportunities:** This "dumb pipe" approach provides frictionless interoperability with the POSIX C ABI (`PLAT-001`). It ensures that MakeOps can safely route advanced shell arguments and environmental variables natively, retaining a $100\%$ pure execution environment while significantly simplifying formal mathematical verification (AoRE).
 

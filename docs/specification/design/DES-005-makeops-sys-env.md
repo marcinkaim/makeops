@@ -37,11 +37,11 @@
 
 * **Core Types & State:**
     * `Max_Env_Var_Name_Length`: A static constant (64) defining the maximum byte length of an environment variable key (from `PLAT-006`).
-    * `Max_Env_Var_Value_Length`: A static constant (1024) defining the maximum byte length of an environment variable value.
+    * `Max_Env_Var_Value_Length`: A static constant (32768) defining the maximum byte length of an environment variable value.
     * `Env_Name_String`: A bounded string type (capacity `Max_Env_Var_Name_Length`) for variable keys.
     * `Env_Value_String`: A bounded string type (capacity `Max_Env_Var_Value_Length`) for variable values.
-    * `Query_Status`: An enumeration (`Found`, `Not_Found`) representing the outcome of the query.
-    * `Env_Result`: A discriminated variant record (parameterized by `Query_Status`). If `Found`, it contains the `Env_Value_String`. If `Not_Found`, it contains no string data, guaranteeing memory safety.
+    * `Query_Status`: An enumeration (`Found`, `Not_Found`, `Too_Long`) representing the outcome of the query.
+    * `Env_Result`: A discriminated variant record (parameterized by `Query_Status`). If `Found`, it contains the `Env_Value_String`. If `Not_Found` or `Too_Long`, it contains no string data, guaranteeing memory safety and Fail-Fast behavior.
 * **Main Subprograms:**
     * `Get`: A function accepting an environment variable name (as a bounded string) and returning an `Env_Result`.
 * **Invariants & Contracts (Conceptual):**
@@ -50,8 +50,8 @@
 ## 4. Implementation Guidelines (.adb details)
 
 * **Implementation Scope:** The package body (`.adb`) MUST be marked with `pragma SPARK_Mode (Off)`.
-* **OS / Standard Library Interactions:** Use `Ada.Environment_Variables.Value`. 
-* **Exception Trapping:** Wrap the standard library call in an exception block. If `Ada.Environment_Variables` raises a `Constraint_Error` (which it natively does when a variable does not exist), catch it and return an `Env_Result` initialized with `Not_Found`.
+* **OS / Standard Library Interactions:** Use `Ada.Environment_Variables.Exists` first to check presence, then use `Ada.Environment_Variables.Value` to retrieve the content. Check the string length against `Max_Env_Var_Value_Length` to return `Too_Long` instead of relying on Ada string exceptions (Fail-Fast).
+* **Exception Trapping:** Wrap the standard library calls in a general exception block (`when others`) to trap any unexpected OS-level I/O or tasking exceptions and return `Not_Found`, strictly guaranteeing the Absence of Runtime Errors (AoRE).
 
 ## 5. Verification Strategy
 
@@ -59,3 +59,4 @@
 * **AUnit Test Scenarios:**
     * **Happy Path:** Query a known standard Linux variable (e.g., `PATH` or `USER`) and assert the result is `Found`.
     * **Edge Cases:** Query a deliberately non-existent variable (e.g., `MKO_NON_EXISTENT_VAR_123`) and assert the result is `Not_Found` without throwing an exception.
+    * **Fail-Fast Boundaries:** Set an environment variable exceeding `Max_Env_Var_Value_Length` (32768 bytes) and assert the result is `Too_Long` to ensure it does not crash or silently truncate data.

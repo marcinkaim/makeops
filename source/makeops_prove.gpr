@@ -1,0 +1,26 @@
+-------------------------------------------------------------------------------
+--  MakeOps
+--  Copyright (C) 2026 Marcin Kaim
+--  SPDX-License-Identifier: GPL-3.0-or-later
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+--  MakeOps
+--  Formal Verification (SPARK) Project Configuration
+-------------------------------------------------------------------------------
+
+project MakeOps_Prove is
+
+   for Source_Dirs use (".", "core");
+   for Object_Dir use "../build/obj-prove";
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnat2022");
+   end Compiler;
+
+   package Prove is
+      for Proof_Dir use "../build/obj-prove";
+      for Proof_Switches ("Ada") use ("--mode=prove", "--report=all");
+   end Prove;
+
+end MakeOps_Prove;

@@ -14,7 +14,7 @@ SCRIPTS_DIR = devops/scripts
 
 GPR_FLAGS = -j0 -p
 
-.PHONY: all build release test clean diff commit commit-interactive help license-check check-docs push
+.PHONY: all build release prove test clean diff commit commit-interactive help license-check check-docs push
 
 # Default target
 all: build
@@ -32,6 +32,14 @@ build:
 release:
 	@echo ">> Building MakeOps (Production Mode - Optimized)..."
 	gprbuild $(GPR_FLAGS) -P $(PROJECT_FILE) -XBUILD_MODE=prod
+
+# ------------------------------------------------------------------------------
+# Proving
+# ------------------------------------------------------------------------------
+
+prove:
+	@echo ">> Running SPARK/GNATprove Formal Verification..."
+	gnatprove -P source/makeops_prove.gpr -j0 --level=1 --report=all
 
 # ------------------------------------------------------------------------------
 # Testing

@@ -28,13 +28,13 @@ Ada enforces strict engineering disciplines by design. To satisfy the requiremen
 ### 2.2. Absence of Runtime Errors (AoRE)
 The primary goal of using SPARK in MakeOps is achieving the Absence of Runtime Errors (AoRE). GNATprove statically analyzes the control and data flow of the application to mathematically prove that certain catastrophic events will **never** occur during execution. These include:
 * Division by zero.
-* Array index out of bounds (crucial for the Level 1 Lexer in `ALG-004`).
+* Array index out of bounds (crucial for the Phase 2 Lexer in `MODEL-001`).
 * Integer overflows or underflows.
 * Range constraint violations.
 
 ### 2.3. Pragmatic Contracts (Pre/Post-conditions and Data Flow)
 Instead of writing exhaustive functional proofs, the project employs lightweight, pragmatic contracts:
-* **Data Flow Contracts (`Depends`):** Used in state machines (like `ALG-005`) to explicitly declare which global states are mutated by which inputs, preventing accidental side-effects.
+* **Data Flow Contracts (`Depends`):** Used in state machines (like the Phase 5 Applier in `MODEL-001`) to explicitly declare which global states are mutated by which inputs, preventing accidental side-effects.
 * **Pre/Post-conditions:** Used at the boundaries of the `MakeOps.Sys` OS Adapters (e.g., `PLAT-001`). For instance, a `Pre => Command_Name'Length > 0` contract on the `execvp` wrapper forces the compiler to reject any caller that cannot mathematically prove the string is non-empty.
 
 ### 2.4. Algorithmic Exceptions vs. Deterministic Implementation
@@ -51,7 +51,6 @@ In the conceptual Knowledge-Based Analysis (KBA) documents (e.g., the `ALG` seri
 ## 4. References
 
 **Internal Documentation:**
-* [1] [ALG-004: Event-Driven TOML Lexer](./ALG-004-event-driven-toml-lexer.md)
-* [2] [ALG-005: Event-Driven Semantic Analyzer](./ALG-005-event-driven-semantic-analyzer.md)
-* [3] [PLAT-001: Pure Execution and OS Bindings](./PLAT-001-pure-execution-posix.md)
-* [4] [PLAT-006: Static Memory Model](./PLAT-006-static-memory-model.md)
+* [1] [MODEL-001: 5-Phase Orchestration Pipeline](./MODEL-001-5-phase-pipeline.md)
+* [2] [PLAT-001: Pure Execution and OS Bindings](./PLAT-001-pure-execution-posix.md)
+* [3] [PLAT-006: Static Memory Model](./PLAT-006-static-memory-model.md)

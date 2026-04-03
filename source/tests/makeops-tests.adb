@@ -13,7 +13,6 @@ with MakeOps.Tests.Sys_Signals;
 with MakeOps.Tests.Sys_Identity;
 with MakeOps.Tests.Sys_Time;
 with MakeOps.Tests.Sys_File_Stream;
-with MakeOps.Tests.Core_TOML_Lexer;
 
 package body MakeOps.Tests is
 
@@ -29,7 +28,6 @@ package body MakeOps.Tests is
    Sys_Identity_Tests    : aliased MakeOps.Tests.Sys_Identity.Test_Case;
    Sys_Time_Tests        : aliased MakeOps.Tests.Sys_Time.Test_Case;
    Sys_File_Stream_Tests : aliased MakeOps.Tests.Sys_File_Stream.Test_Case;
-   Core_TOML_Lexer_Tests : aliased MakeOps.Tests.Core_TOML_Lexer.Test_Case;
 
    -----------
    -- Suite --
@@ -47,7 +45,6 @@ package body MakeOps.Tests is
       Result.Add_Test (Sys_Identity_Tests'Access);
       Result.Add_Test (Sys_Time_Tests'Access);
       Result.Add_Test (Sys_File_Stream_Tests'Access);
-      Result.Add_Test (Core_TOML_Lexer_Tests'Access);
       return Result;
    end Suite;
 

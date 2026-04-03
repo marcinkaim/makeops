@@ -19,7 +19,7 @@
 * **Responsibility:**
     * Provides a deterministic mechanism to print text to the console.
     * Traps and safely suppresses underlying OS and `Ada.Text_IO` exceptions (such as `Device_Error` when a pipe is broken).
-* **Out of Scope:** This package strictly handles raw text output. It MUST NOT contain logic for contextual error rendering (`ALG-010`), nor should it manage ANSI colors, emojis, or log levels (`PLAT-012`). Those responsibilities belong to `MakeOps.App.Logging` which will consume this package.
+* **Out of Scope:** This package strictly handles raw text output. It MUST NOT contain logic for contextual error rendering (`MODEL-002`), nor should it manage ANSI colors, emojis, or log levels (`PLAT-012`). Those responsibilities belong to `MakeOps.App.Logging` which will consume this package.
 
 ## 2. Traceability & Dependencies
 

@@ -60,7 +60,7 @@ When executing external commands (via `PLAT-001`), MakeOps intercepts the child'
 2. **Error Highlighting:** Any line intercepted from the child's `stderr` pipe is automatically colored **Red** (or Yellow) to instantly alert the developer.
 
 ### 2.4. Contextual Error Rendering (Fail-Fast)
-For parsing and domain logic errors (`ALG-004`, `ALG-005`, `ALG-001`), MakeOps mandates Contextual Rendering. Errors must display the file name, line number, and a visual pointer to the exact failure point.
+For parsing and domain logic errors (`MODEL-001`, `ALG-001`), MakeOps mandates Contextual Rendering. Errors must display the file name, line number, and a visual pointer to the exact failure point.
 
 **Example Rendering:**
 ```text

@@ -28,7 +28,7 @@ Instead of interpreting Ada's `String` as an array of semantic, human-readable c
 ### 2.2. The UTF-8 Mathematical Guarantee
 Treating UTF-8 strings as raw 8-bit arrays poses a theoretical risk to parsers: could a multi-byte character be accidentally split or misidentified as a syntactical separator? 
 By mathematical design, UTF-8 guarantees that this will never happen. The standard ASCII characters (values 0-127) are represented identically in UTF-8. Any multi-byte character (such as `ą`, `🚀`, or `中`) is constructed exclusively using "continuation bytes" whose decimal values strictly fall within the 128-255 range. 
-Because the MakeOps Level 1 Lexer (`ALG-004`) only searches for structural ASCII delimiters (like `[`, `]`, `=`, and `"`), it will never falsely match a byte belonging to a multi-byte UTF-8 sequence.
+Because the MakeOps Phase 2 Lexer (`MODEL-001`) only searches for structural ASCII delimiters (like `[`, `]`, `=`, and `"`), it will never falsely match a byte belonging to a multi-byte UTF-8 sequence.
 
 ### 2.3. Length Mismatch and Memory Bounds
 Because UTF-8 characters can span up to 4 bytes, there is a fundamental disconnect between the *visual length* of a string (glyphs) and its *physical length* (bytes). If a user writes a 5-glyph word containing a multi-byte character, its physical length inside the Ada `String` array might be 6 or 7 elements.
@@ -45,4 +45,4 @@ Because UTF-8 characters can span up to 4 bytes, there is a fundamental disconne
 * [1] [PLAT-001: Pure Execution and OS Bindings](./PLAT-001-pure-execution-posix.md)
 * [2] [PLAT-005: SPARK Formal Verification and Ada 2022 Constraints](./PLAT-005-spark-formal-verification.md)
 * [3] [PLAT-006: Static Memory Model](./PLAT-006-static-memory-model.md)
-* [4] [ALG-004: Event-Driven TOML Lexer](./ALG-004-event-driven-toml-lexer.md)
+* [4] [MODEL-001: 5-Phase Orchestration Pipeline](./MODEL-001-5-phase-pipeline.md)

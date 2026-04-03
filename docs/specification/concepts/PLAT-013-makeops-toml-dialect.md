@@ -24,7 +24,7 @@ The foundation of this dialect is rooted in the "Deep Tech" philosophy, strict m
 
 ### 2.1. The Deep Tech Philosophy (Zero Dependencies)
 A common approach in modern software is to import a full-featured, third-party library to parse configuration files. MakeOps explicitly rejects this approach. Standard TOML libraries typically dynamically allocate large, generic Abstract Syntax Trees (ASTs) on the heap to accommodate unpredictable data structures. 
-By adhering to the Deep Tech philosophy, MakeOps relies exclusively on the Ada 2022 Standard Library and direct Linux kernel bindings. Implementing a custom, specialized lexer (`ALG-004`) eliminates third-party supply chain risks, ensures absolute compatibility with the Static Memory Model (`PLAT-006`), and allows the parsing logic to be mathematically proven using the SPARK formal verification toolset (`PLAT-005`). 
+By adhering to the Deep Tech philosophy, MakeOps relies exclusively on the Ada 2022 Standard Library and direct Linux kernel bindings. Implementing a custom, specialized 5-Phase Pipeline (`MODEL-001`) eliminates third-party supply chain risks, ensures absolute compatibility with the Static Memory Model (`PLAT-006`), and allows the parsing logic to be mathematically proven using the SPARK formal verification toolset (`PLAT-005`).
 
 ### 2.2. The String-Only Paradigm
 The official TOML specification supports complex data types: integers, floats, booleans, and RFC 3339 formatted dates. The MakeOps Dialect rejects all of them.
@@ -34,7 +34,7 @@ Because MakeOps acts as a "Pure Execution" orchestrator (`PLAT-001`), it does no
 * **Valid:** `log_level = "info"`
 
 ### 2.3. Supported Grammar Subset
-The MakeOps TOML Lexer only recognizes the following syntactical constructs:
+The MakeOps TOML Parser (`MODEL-001`, Phase 3) only recognizes the following syntactical constructs:
 1. **Sections:** Denoted by brackets `[section_name]` or `[parent.child]`.
 2. **String Key-Value Pairs:** Keys mapped to string literals enclosed in double quotes (e.g., `key = "value"`).
 3. **Array of Strings:** Keys mapped to lists of strings enclosed in brackets (e.g., `key = ["val1", "val2"]`). Arrays can span multiple lines.
@@ -43,7 +43,7 @@ The MakeOps TOML Lexer only recognizes the following syntactical constructs:
 Any attempt to use inline tables, bare numbers, booleans, multi-line string literals (`"""`), or arrays of arrays will result in an immediate syntactical failure.
 
 ## 3. Engineering Impact
-* **Constraints:** The underlying parsing mechanism (`ALG-004`) MUST strictly enforce this grammar subset. It MUST immediately return an `Invalid_Syntax` error if a value is not enclosed in double quotes or brackets, fulfilling the "Fail-Fast" requirement. Developers MUST NOT attempt to extend the parser to support native numeric or boolean types unless the core POSIX execution strategy fundamentally changes.
+* **Constraints:** The underlying Phase 3 Parser (`MODEL-001`) MUST strictly enforce this grammar subset. It MUST immediately return an `Invalid_Syntax` error if a value is not enclosed in double quotes or brackets, fulfilling the "Fail-Fast" requirement. Developers MUST NOT attempt to extend the parser to support native numeric or boolean types unless the core POSIX execution strategy fundamentally changes.
 * **Performance Risks:** None. By reducing the grammar to such a primitive subset, the parser avoids complex lookahead and backtracking algorithms, resulting in blazing-fast, $O(N)$ linear stream processing.
 * **Opportunities:** Constraining the data types entirely to bounded strings (`PLAT-011`) allows the system's core state records (e.g., the Environment Dictionary) to be drastically simplified. This makes the formal mathematical verification (AoRE) of the internal data flow almost trivial.
 
@@ -54,5 +54,5 @@ Any attempt to use inline tables, bare numbers, booleans, multi-line string lite
 * [2] [PLAT-005: SPARK Formal Verification and Ada 2022 Constraints](./PLAT-005-spark-formal-verification.md)
 * [3] [PLAT-006: Static Memory Model](./PLAT-006-static-memory-model.md)
 * [4] [PLAT-011: Text Encoding and Memory Safety](./PLAT-011-text-encoding-model.md)
-* [5] [ALG-004: Event-Driven TOML Lexer](./ALG-004-event-driven-toml-lexer.md)
+* [5] [MODEL-001: 5-Phase Orchestration Pipeline](./MODEL-001-5-phase-pipeline.md)
 * [6] [REQ-001: Project Configuration Handling](../design/REQ-001-project-configuration.md)

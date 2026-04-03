@@ -31,8 +31,8 @@
     * `PLAT-004` (Isolated OS Boundaries: Exception Isolation and Graceful Degradation).
     * `PLAT-006` (Static Memory Model: Bounded strings for file lines).
     * `PLAT-011` (Text Encoding Model: Processing files as Raw Byte Buckets).
-    * `ALG-004` (Event-Driven TOML Lexer: Line-by-Line Stream Processing).
-    * `ALG-010` (Contextual Error Rendering: Re-reading the file to extract a specific line).
+    * `MODEL-001` (5-Phase Orchestration Pipeline: Phase 1 & 2 Stream Processing).
+    * `MODEL-002` (Zero-Allocation Diagnostic Pattern: Re-reading the file to extract a specific line).
 * **Internal Package Dependencies:**
     * `MakeOps.Sys` (for baseline operational types).
     * `MakeOps.Sys.FS` (for `Path_String` usage when opening files).
@@ -52,7 +52,7 @@
 * **Invariants & Contracts (Conceptual):**
     * The package specification (`.ads`) MUST be marked with `pragma SPARK_Mode (On)`.
     * The subprograms MUST guarantee Absence of Runtime Errors (AoRE). They must never propagate native exceptions.
-    * The caller must guarantee that `Close_File` is always invoked if `Open_File` returned `Success`, even in abort scenarios (e.g., inside `ALG-010`).
+    * The caller must guarantee that `Close_File` is always invoked if `Open_File` returned `Success`, even in abort scenarios (e.g., inside `MODEL-002`).
 
 ## 4. Implementation Guidelines (.adb details)
 

@@ -7,7 +7,15 @@
 
 Instead of embedding shell scripts, MakeOps defines operations, dependencies, and execution arguments in a strictly typed `makeops.toml` configuration file. It constructs a directed acyclic graph (DAG) of dependencies to execute operations in the correct order, ensuring a reliable and reproducible operational environment.
 
-**Key Features:**
+## 🔭 Vision
+
+* **Purpose:** A deterministic tool to manage DevOps operations in IT projects.
+* **Inspiration:** Modeled after GNU Make, widely used for building C/C++ projects.
+* **Configuration:** Operations are defined in a `makeops.toml` file, much like targets in a `Makefile`.
+* **Execution:** Resolves operation dependencies using directed acyclic graph (DAG) algorithms.
+
+## ✨ Key Features
+
 * **Dependency Resolution:** Automatically resolves and executes operation chains defined in discrete `[operations.<name>]` sections.
 * **Pure Execution:** Disallows embedded shell scripting to enforce security and clarity; executes explicit binaries (`cmd`) with strictly passed argument arrays (`args`).
 * **Configuration Logic:** Supports dynamic variable substitution (`${VAR_NAME}`) via a centralized `[environment]` section.
@@ -68,17 +76,12 @@ make clean
 
 ## 🧠 Development Methodology
 
-This project adopts a rigorous, engineering-first approach combining two key philosophies to ensure mathematical correctness and software reliability:
+This project adopts a rigorous, engineering-first approach based on **First Principles** to ensure mathematical correctness and software reliability.
 
-### 1. Knowledge-Based Analysis (KBA)
-We believe that understanding precedes specification. Before defining *how* the system behaves, we analyze *what* is mathematically and physically possible based on **First Principles**.
-* **Outcome:** Mathematical proofs, algorithmic theories, and hardware constraint models.
-* **Location:** `specification/concepts`
-
-### 2. Specification-Driven Development (SDD)
-Code is a liability; specification is an asset. We write normative Requirements (`REQ`) and Package Designs (`DES`) before writing the implementation. This separates the **Design Phase** from the **Coding Phase**.
-* **Outcome:** Verifiable requirements and architecture definitions.
-* **Location:** `specification/design`
+### Specification-Driven Development (SDD)
+Code is a liability; specification is an asset. We write normative Requirements (`REQ`), Conceptual Models (`MOD`), and Package Designs (`DES`) before writing the implementation. This strictly separates the conceptual and design phases from the coding phase.
+* **Outcome:** Verifiable requirements, abstract domain models, and formal architecture definitions.
+* **Location:** `docs/specification/`
 
 ## 📂 Repository Structure
 
@@ -90,9 +93,7 @@ The repository follows a strict separation of concerns, distinguishing between t
 │   └── scripts/                # Automation scripts (git sync, license check)
 ├── docs/                       # Project Documentation
 │   ├── manual/                 # End-user guides and manuals
-│   └── specification/          # The Knowledge Base and Specifications
-│       ├── concepts/           # Theoretical Basis: Math, Algorithms (ALG), Platform Constraints (PLAT)
-│       └── design/             # Normative Specs: Requirements (REQ), Package Designs (DES)
+│   └── specification/          # Technical Specifications: Requirements (REQ), Conceptual Models (MOD) and Package Designs (DES)
 ├── LICENSES/                   # License texts (REUSE compliance)
 ├── source/                     # Source Code (Ada 2022)
 │   ├── app/                    # Application Entry Point & CLI Drivers
@@ -102,6 +103,7 @@ The repository follows a strict separation of concerns, distinguishing between t
 │   ├── makeops_app.gpr         # Main Application Project Definition
 │   └── makeops_tests.gpr       # Unit Testing Project Definition
 ├── .gitignore                  # Git exclusion rules
+├── INDEX.md                    # MakeOps Repository Index
 ├── LICENSE                     # GPLv3 license
 ├── Makefile                    # Operations Facade (build, test, push)
 ├── makeops.gpr                 # Master GPR Aggregate Project

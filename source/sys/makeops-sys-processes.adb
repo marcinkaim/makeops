@@ -320,7 +320,7 @@ package body MakeOps.Sys.Processes is
    -----------------------
 
    function Read_Stream_Chunk (FD : File_Descriptor) return Stream_Result is
-      --  We use a standard String as our Raw Byte Bucket (PLAT-011)
+      --  We use a standard String as our Raw Byte Bucket
       Buffer     : aliased String (1 .. Max_Stream_Chunk_Length) :=
         [others => ASCII.NUL];
       Bytes_Read : ssize_t;

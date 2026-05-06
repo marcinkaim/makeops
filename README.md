@@ -74,14 +74,13 @@ To clean all build artifacts and object files:
 make clean
 ```
 
-## 🧠 Development Methodology
+## 🧠 Engineering Philosophy & Methodology
 
-This project adopts a rigorous, engineering-first approach based on **First Principles** to ensure mathematical correctness and software reliability.
+MakeOps is built on **First Principles** and rigorous **Specification-Driven Development (SDD)**. In this project, code is considered a physical consequence of formal design, not the starting point. This ensures deterministic behavior and the mathematical Absence of Runtime Errors (AoRE).
 
-### Specification-Driven Development (SDD)
-Code is a liability; specification is an asset. We write normative Requirements (`REQ`), Conceptual Models (`MOD`), and Package Designs (`DES`) before writing the implementation. This strictly separates the conceptual and design phases from the coding phase.
-* **Outcome:** Verifiable requirements, abstract domain models, and formal architecture definitions.
-* **Location:** `docs/specification/`
+We orchestrate our engineering efforts through a strict 7-Phase Software Development Life Cycle (SDLC), divided into two macro-phases:
+* **Macro-Phase I: Analysis:** Global upfront definition of capabilities (`REQ`), domain models (`MOD`), spatial architecture (`ARC`), and logistical scheduling (`SCH`).
+* **Macro-Phase II: Realization:** Incremental, staged construction where every package must pass through formal design (`DES`), physical coding (Ada/SPARK), and mathematical/empirical verification (`VER`).
 
 ## 📂 Repository Structure
 

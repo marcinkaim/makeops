@@ -92,7 +92,7 @@ The repository follows a strict separation of concerns, distinguishing between t
 │   └── scripts/                # Automation scripts (git sync, license check)
 ├── docs/                       # Project Documentation
 │   ├── manual/                 # End-user guides and manuals
-│   └── specification/          # Technical Specifications: Requirements (REQ), Conceptual Models (MOD) and Package Designs (DES)
+│   └── specification/          # Technical Specifications: Requirements (REQ), Models (MOD), Architecture (ARC), Schedules (SCH), Designs (DES), and Verification (VER)
 ├── LICENSES/                   # License texts (REUSE compliance)
 ├── source/                     # Source Code (Ada 2022)
 │   ├── app/                    # Application Entry Point & CLI Drivers

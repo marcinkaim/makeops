@@ -9,7 +9,7 @@
 | Attribute | Value |
 | :--- | :--- |
 | **Document ID** | `SCH-002` |
-| **Status** | `DRAFT` |
+| **Status** | `APPROVED` |
 | **Date** | 2026-05-08 |
 | **Target Stage** | Stage 2 |
 

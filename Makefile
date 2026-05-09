@@ -62,14 +62,14 @@ clean:
 diff:
 	@$(SCRIPTS_DIR)/generate_staged_diff.sh
 
-commit:
+commit: check-docs 
 	@if [ "$(FILE)" != "" ]; then \
 		$(SCRIPTS_DIR)/commit_ai.sh --input-file "$(FILE)"; \
 	else \
 		$(SCRIPTS_DIR)/commit_ai.sh; \
 	fi
 
-commit-interactive:
+commit-interactive: check-docs 
 	@$(SCRIPTS_DIR)/commit_interactive.sh
 
 # Help command

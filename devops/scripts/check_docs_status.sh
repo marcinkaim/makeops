@@ -47,11 +47,23 @@ while IFS= read -r -d '' file; do
         continue
     fi
 
-    # Evaluate the status value. We explicitly look for the `APPROVED` literal.
-    if [[ ! "$STATUS_LINE" =~ \`APPROVED\` ]]; then
-        echo -e "${RED}[ERROR]${NC} $file: Document is not APPROVED."
-        echo -e "       Found status line: $STATUS_LINE"
-        FAILED_COUNT=$((FAILED_COUNT + 1))
+    # Evaluate the status value based on document type.
+    FILENAME=$(basename "$file")
+    
+    if [[ "$FILENAME" == SCH-* ]]; then
+        # SCH documents can be APPROVED or COMPLETED
+        if [[ ! "$STATUS_LINE" =~ \`APPROVED\` ]] && [[ ! "$STATUS_LINE" =~ \`COMPLETED\` ]]; then
+            echo -e "${RED}[ERROR]${NC} $file: SCH document is neither APPROVED nor COMPLETED."
+            echo -e "       Found status line: $STATUS_LINE"
+            FAILED_COUNT=$((FAILED_COUNT + 1))
+        fi
+    else
+        # All other documents MUST strictly be APPROVED
+        if [[ ! "$STATUS_LINE" =~ \`APPROVED\` ]]; then
+            echo -e "${RED}[ERROR]${NC} $file: Document is not APPROVED."
+            echo -e "       Found status line: $STATUS_LINE"
+            FAILED_COUNT=$((FAILED_COUNT + 1))
+        fi
     fi
 
 done < <(find "$TARGET_DIR" -type f -name "*.md" -print0)
@@ -61,10 +73,10 @@ echo -e "${BLUE}[INFO] Scan complete. Checked $CHECKED_COUNT files.${NC}"
 # Final evaluation and exit code routing
 if [ "$FAILED_COUNT" -gt 0 ]; then
     echo -e "${RED}[ERROR] $FAILED_COUNT document(s) failed the status check.${NC}"
-    echo -e "Only APPROVED documents are allowed to be tracked in the repository."
+    echo -e "Only APPROVED (and COMPLETED for SCH) documents are allowed to be tracked in the repository."
     echo -e "Please finalize DRAFTs, remove DEPRECATED files, or stash your changes."
     exit 1
 else
-    echo -e "${GREEN}[SUCCESS] All specification documents are strictly APPROVED.${NC}"
+    echo -e "${GREEN}[SUCCESS] All specification documents passed the status validation.${NC}"
     exit 0
 fi

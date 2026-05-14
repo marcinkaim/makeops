@@ -31,9 +31,9 @@
         * `F-002-004`: Enforces dynamic substitution of declared environment variables within operational commands prior to process spawning.
         * `NFR-002-003`: Dictates the use of Directed Acyclic Graph (DAG) traversal algorithms to guarantee mathematical execution ordering.
 * **Applies Concepts:**
-    * `MOD-004`: Execution Plan Resolution - Governs the Resolver's use of topological sorting, Virtual Root injection, and memoized lazy substitution mechanisms.
-    * `MOD-005`: Asynchronous Execution and Multiplexing - Dictates the Executor's stateful event loop, asynchronous `poll` mechanics, and Strict Child Coupling invariants to prevent deadlocks.
-    * `MOD-018`: Project Configuration Schema Model - Enforces the strict, String-Only schema validation rules used by the Applier during Phase 5 IR consumption.
+    * `MOD-004` (Execution Plan Resolution): Governs the Resolver's use of topological sorting, Virtual Root injection, and memoized lazy substitution mechanisms.
+    * `MOD-005` (Asynchronous Execution and Multiplexing): Dictates the Executor's stateful event loop, asynchronous `poll` mechanics, and Strict Child Coupling invariants to prevent deadlocks.
+    * `MOD-018` (Project Configuration Schema Model): Enforces the strict, String-Only schema validation rules used by the Applier during Phase 5 IR consumption.
 
 ## 4. Architectural Topology
 

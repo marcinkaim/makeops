@@ -31,9 +31,9 @@
         * `F-003-006` to `F-003-008`: Implements the visual verbosity levels by dynamically routing or suppressing terminal streams based on the global configuration.
         * `NFR-003-001`: Guarantees real-time transparency by ensuring output is streamed without artificial buffering.
 * **Applies Concepts:**
-    * `MOD-001`: Master Orchestration Lifecycle - Dictates the strict sequential execution algorithm (Intent Acquisition -> Context -> Domain -> Plan -> Execution) managed by the Orchestrator.
-    * `MOD-016`: Observability and Visual Taxonomy Model - Governs the terminal formatting rules, standard colors, and stream separation implemented by the Logger.
-    * `MOD-017`: Zero-Allocation Diagnostic Pattern - Dictates the Just-In-Time (JIT) file extraction heuristics used to dynamically render contextual error pointers.
+    * `MOD-001` (Master Orchestration Lifecycle): Dictates the strict sequential execution algorithm (Intent Acquisition -> Context -> Domain -> Plan -> Execution) managed by the Orchestrator.
+    * `MOD-016` (Observability and Visual Taxonomy Model): Governs the terminal formatting rules, standard colors, and stream separation implemented by the Logger.
+    * `MOD-017` (Zero-Allocation Diagnostic Pattern): Dictates the Just-In-Time (JIT) file extraction heuristics used to dynamically render contextual error pointers.
 
 ## 4. Architectural Topology
 

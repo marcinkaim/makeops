@@ -30,9 +30,9 @@
         * `F-001-002`: Fulfills the requirement to parse discrete operations and environments from structured text sections.
         * `NFR-001-001`: Enforces strict parsing according to the highly restricted MakeOps TOML Dialect, explicitly rejecting complex data types.
 * **Applies Concepts:**
-    * `MOD-002`: Universal 5-Phase Processing Pipeline - Implements Phases 1 through 4 (Reader, Lexer, Parser, Normalizer) of the Zero-AST architecture.
-    * `MOD-013`: MakeOps TOML Dialect Model - Constrains the Parser to a strict, String-Only finite state machine (FSM) to maintain $O(1)$ memory complexity.
-    * `MOD-017`: Zero-Allocation Diagnostic Pattern - Requires the Lexer and Parser to attach accurate spatial coordinates (`Line_Number`, `Column_Number`) to every event for contextual error rendering.
+    * `MOD-002` (Universal 5-Phase Processing Pipeline): Implements Phases 1 through 4 (Reader, Lexer, Parser, Normalizer) of the Zero-AST architecture.
+    * `MOD-013` (MakeOps TOML Dialect Model): Constrains the Parser to a strict, String-Only finite state machine (FSM) to maintain $O(1)$ memory complexity.
+    * `MOD-017` (Zero-Allocation Diagnostic Pattern): Requires the Lexer and Parser to attach accurate spatial coordinates (`Line_Number`, `Column_Number`) to every event for contextual error rendering.
 
 ## 4. Architectural Topology
 

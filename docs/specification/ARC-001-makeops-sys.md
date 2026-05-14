@@ -33,9 +33,9 @@
     * `REQ-003` (Execution Observability):
         * `NFR-003-001`: Exposes raw terminal streams and process execution status to satisfy real-time observability constraints.
 * **Applies Concepts:**
-    * `MOD-007`: Pure Execution OS Boundaries - Applies the Dual-Layer abstraction pattern (Thin Binding vs. Thick Wrapper) to safely call POSIX C functions.
-    * `MOD-011`: Isolated OS Boundaries and Exception Handling - Employs the Boundary Isolation pattern, using `pragma SPARK_Mode (Off)` in bodies to trap exceptions and `pragma SPARK_Mode (On)` in specifications to return monadic `Result` types.
-    * `MOD-012`: Execution Context & Security Model - Provides the foundational path resolution, CWD shifting (`chdir`), and UID checks (`getuid`) required to prevent workspace pollution.
+    * `MOD-007` (Pure Execution OS Boundaries): Applies the Dual-Layer abstraction pattern (Thin Binding vs. Thick Wrapper) to safely call POSIX C functions.
+    * `MOD-011` (Isolated OS Boundaries and Exception Handling): Employs the Boundary Isolation pattern, using `pragma SPARK_Mode (Off)` in bodies to trap exceptions and `pragma SPARK_Mode (On)` in specifications to return monadic `Result` types.
+    * `MOD-012` (Execution Context & Security Model): Provides the foundational path resolution, CWD shifting (`chdir`), and UID checks (`getuid`) required to prevent workspace pollution.
 
 ## 4. Architectural Topology
 

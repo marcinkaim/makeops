@@ -31,8 +31,8 @@
         * `F-004-007`: Enforces graceful degradation by ignoring missing optional configuration files and seamlessly falling back to lower-priority defaults.
         * `NFR-004-003`: Guarantees Separation of Concerns by strictly rejecting preference files containing operational logic (`[operations]` sections).
 * **Applies Concepts:**
-    * `MOD-003`: Hierarchical Configuration Cascade - Governs the implementation of the Loader, including the Bottom-Up merging heuristic and the concept of partial Monoid-like structures (overlaying `Not_Set` fields).
-    * `MOD-019`: Global Preferences Schema Model - Defines the normative structure (`[preferences]`), the security hardening (rejecting `allow_root` in TOML), and the rigid String-Only schema validation performed by the Applier.
+    * `MOD-003` (Hierarchical Configuration Cascade): Governs the implementation of the Loader, including the Bottom-Up merging heuristic and the concept of partial Monoid-like structures (overlaying `Not_Set` fields).
+    * `MOD-019` (Global Preferences Schema Model): Defines the normative structure (`[preferences]`), the security hardening (rejecting `allow_root` in TOML), and the rigid String-Only schema validation performed by the Applier.
 
 ## 4. Architectural Topology
 

@@ -30,9 +30,9 @@
         * `F-003-001`: Fulfills the capability to accept operational targets and configuration flags directly from the `mko` command invocation.
         * `F-003-002`: Normalizes specific flags allowing users to control logging verbosity levels dynamically.
 * **Applies Concepts:**
-    * `MOD-002`: Universal 5-Phase Processing Pipeline - Implements the generic processing mechanism (Phases 1-4) without object-oriented state polymorphism, keeping memory $O(1)$.
-    * `MOD-015`: CLI Interface and Argument Normalization - Dictates the FSM parsing rules, strict POSIX option conventions, and the distinct separation of tokens into the Config Branch and Command Branch (Intent Queue).
-    * `MOD-009`: Formal Verification & Static Memory Foundations - Enforces strict byte-length checks on user-provided arguments against the `Max_Arg_Length` limit to eliminate buffer overflow vulnerabilities.
+    * `MOD-002` (Universal 5-Phase Processing Pipeline): Implements the generic processing mechanism (Phases 1-4) without object-oriented state polymorphism, keeping memory $O(1)$.
+    * `MOD-015` (CLI Interface and Argument Normalization): Dictates the FSM parsing rules, strict POSIX option conventions, and the distinct separation of tokens into the Config Branch and Command Branch (Intent Queue).
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Enforces strict byte-length checks on user-provided arguments against the `Max_Arg_Length` limit to eliminate buffer overflow vulnerabilities.
 
 ## 4. Architectural Topology
 

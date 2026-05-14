@@ -29,8 +29,8 @@
     * `REQ-003` (Execution Observability):
         * `F-003-001`: Implements the top-level interface capable of accepting operational targets and distinguishing them from global configuration flags.
 * **Applies Concepts:**
-    * `MOD-015`: CLI Interface and Argument Normalization - Enforces the Dual-Branch Normalization logic, explicitly separating the Config Branch (passed to `MakeOps.App.Config`) from the Intent Branch managed within this namespace.
-    * `MOD-001`: Master Orchestration Lifecycle - Dictates this namespace's role as Phase 1 (Intention Acquisition) in the overarching 5-step sequence, ensuring that Halting actions instantly bypass the remaining pipeline.
+    * `MOD-015` (CLI Interface and Argument Normalization): Enforces the Dual-Branch Normalization logic, explicitly separating the Config Branch (passed to `MakeOps.App.Config`) from the Intent Branch managed within this namespace.
+    * `MOD-001` (Master Orchestration Lifecycle): Dictates this namespace's role as Phase 1 (Intention Acquisition) in the overarching 5-step sequence, ensuring that Halting actions instantly bypass the remaining pipeline.
 
 ## 4. Architectural Topology
 

@@ -31,8 +31,8 @@
     * `REQ-002` (Operation Orchestration):
         * `NFR-002-003`: Dictates that the internal engine utilizes DAG traversal algorithms to guarantee mathematical correctness, bounding the scope of the delegated Project Backend.
 * **Applies Concepts:**
-    * `MOD-002`: Universal 5-Phase Processing Pipeline - Dictates the fundamental structural split of this namespace into distinct Frontends (Phase 1-4) and Backends (Phase 5) communicating purely via IR.
-    * `MOD-009`: Formal Verification & Static Memory Foundations - Imposes the Zero-AST constraint on the parsing subsystems, ensuring that data is processed mechanically without dynamic allocation.
+    * `MOD-002` (Universal 5-Phase Processing Pipeline): Dictates the fundamental structural split of this namespace into distinct Frontends (Phase 1-4) and Backends (Phase 5) communicating purely via IR.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Imposes the Zero-AST constraint on the parsing subsystems, ensuring that data is processed mechanically without dynamic allocation.
 
 ## 4. Architectural Topology
 

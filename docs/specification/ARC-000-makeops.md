@@ -30,7 +30,7 @@
         * `NFR-000-001`: Ensures the root package complies with Ada 2022 standards by establishing a clean, purely declarative namespace.
         * `NFR-000-002`: Sets the absolute baseline for formal SPARK verification by enforcing mathematically pure states at the very top of the dependency tree.
 * **Applies Concepts:**
-    * `MOD-009`: Formal Verification & Static Memory Foundations - Applies the strict `pragma Pure` constraint to the root package to guarantee zero hidden state, enabling seamless Absence of Runtime Errors (AoRE) proofs across all child namespaces.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Applies the strict `pragma Pure` constraint to the root package to guarantee zero hidden state, enabling seamless Absence of Runtime Errors (AoRE) proofs across all child namespaces.
 
 ## 4. Architectural Topology
 

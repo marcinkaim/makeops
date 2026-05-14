@@ -29,7 +29,7 @@
     * `REQ-000` (System Constraints):
         * `NFR-000-005`: Enforces the use of the AUnit framework for unit testing and dictates the isolation of the build process via a dedicated GPR configuration.
 * **Applies Concepts:**
-    * `MOD-009`: Formal Verification & Static Memory Foundations - While SPARK proves the *Absence of Runtime Errors*, this testing domain applies the complementary empirical validation to prove *Functional Correctness* at the unprovable system boundaries (e.g., POSIX interactions).
+    * `MOD-009` (Formal Verification & Static Memory Foundations): While SPARK proves the *Absence of Runtime Errors*, this testing domain applies the complementary empirical validation to prove *Functional Correctness* at the unprovable system boundaries (e.g., POSIX interactions).
 
 ## 4. Architectural Topology
 

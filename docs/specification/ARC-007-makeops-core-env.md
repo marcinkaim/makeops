@@ -29,9 +29,9 @@
     * `REQ-004` (Global Tool Preferences):
         * `F-004-005`: Fulfills the requirement to support overriding configuration parameters via specific environment variables (e.g., `MKO_LOG_LEVEL`).
 * **Applies Concepts:**
-    * `MOD-002`: Universal 5-Phase Processing Pipeline - Implements Phase 1 (Reader) and Phase 4 (Normalizer), demonstrating the pipeline's architectural flexibility by safely omitting the Lexer and Parser phases for natively structured data.
-    * `MOD-014`: Environment Variables & Shadowing Model - Dictates the strict namespace separation between global orchestrator settings and project-level parameters, as well as the anti-injection Terminal-Value rules.
-    * `MOD-009`: Formal Verification & Static Memory Foundations - Enforces rigid bounds-checking against the `Max_Env_Var_Value_Length` limit prior to converting OS bytes into universal pipeline events.
+    * `MOD-002` (Universal 5-Phase Processing Pipeline): Implements Phase 1 (Reader) and Phase 4 (Normalizer), demonstrating the pipeline's architectural flexibility by safely omitting the Lexer and Parser phases for natively structured data.
+    * `MOD-014` (Environment Variables & Shadowing Model): Dictates the strict namespace separation between global orchestrator settings and project-level parameters, as well as the anti-injection Terminal-Value rules.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Enforces rigid bounds-checking against the `Max_Env_Var_Value_Length` limit prior to converting OS bytes into universal pipeline events.
 
 ## 4. Architectural Topology
 

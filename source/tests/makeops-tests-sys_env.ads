@@ -14,7 +14,7 @@ package MakeOps.Tests.Sys_Env is
    procedure Register_Tests (T : in out Test_Case);
    function Name (T : Test_Case) return AUnit.Message_String;
 
-   --  Test Scenarios defined in DES-005
+   --  Edge Cases: Variable Existence
    procedure Test_Get_Existing_Variable
      (T : in out AUnit.Test_Cases.Test_Case'Class);
 

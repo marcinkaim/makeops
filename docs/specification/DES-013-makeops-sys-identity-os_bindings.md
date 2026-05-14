@@ -23,29 +23,27 @@
 
 ## 2. Traceability & Dependencies
 
-* **Implements Requirements:** `REQ-000` (System constraints and security).
+* **Implements Requirements:**
+    * `REQ-000` (System Constraints):
+        * `F-000-003`: Provides the native OS bindings necessary to query the operating system user identity (`getuid`), fulfilling the foundational security checks.
 * **Applies Concepts:**
-    * `MOD-007` (Pure Execution OS Boundaries: Thin Bindings to C ABI).
-    * `MOD-012` (Execution Context & Security Model: Security Context and Root Privileges).
-* **Internal Package Dependencies:** None. Depends only on standard `Interfaces.C`.
+    * `MOD-007` (Pure Execution OS Boundaries): Defines the requirement for unsafe thin bindings mapping directly to the C ABI.
+    * `MOD-012` (Execution Context & Security Model): Supplies the fundamental POSIX function signature required to physically identify superuser execution.
+* **Internal Package Dependencies:**
+    * None. This package serves as a foundational OS adapter and relies exclusively on the standard Ada C-interoperability library (`Interfaces.C`).
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * Native C types mapped via `Interfaces.C` (e.g., `C.unsigned` for POSIX `uid_t`).
+    * `uid_t`: A native POSIX integer type mapped via `Interfaces.C.unsigned` representing the User ID.
 * **Main Subprograms:**
-    * `c_getuid`: A function matching the POSIX `uid_t getuid(void)` signature. Returns the real user ID of the calling process.
-* **Invariants & Contracts (Conceptual):**
-    * The package MUST be declared as a `private package` to physically prevent any higher-level domain code from invoking the unsafe C function directly.
-    * The specification MUST use `pragma SPARK_Mode (Off)`, as external C functions are inherently unprovable by GNATprove and break Absence of Runtime Errors (AoRE) guarantees.
+    * `c_getuid`: A thin binding to the POSIX `getuid` function. Returns the real user ID of the calling process as a `uid_t` scalar.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the `pragma SPARK_Mode (Off)` constraint. As a thin binding layer directly exposing the Linux C ABI, it is fundamentally unprovable by GNATprove.
+    * The package MUST be declared as a `private package` (i.e., `private package MakeOps.Sys.Identity.OS_Bindings`). This strict boundary isolation mathematically prevents any higher-level domain code from accidentally invoking unsafe C functions, restricting its consumption exclusively to its parent thick wrapper (`MakeOps.Sys.Identity`).
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** A package body (`.adb` file) is strictly NOT required. The subprogram is linked externally using `pragma Import (C, c_getuid, "getuid")`. The `.ads` file is sufficient for defining the types and imports.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** Explicitly excluded (`SPARK_Mode (Off)`).
-* **AUnit Test Scenarios:**
-    * **Direct Testing:** Not required and actively discouraged. Thin bindings should not be unit-tested in isolation.
-    * **Indirect Validation:** Validated entirely through the test suite of its parent thick wrapper (`MakeOps.Sys.Identity`), which provides a safe, boolean interface to this C function.
+* **Algorithmic Flow & Models:** Not Applicable. This package acts as a purely declarative thin binding layer utilizing `pragma Import (C, ...)` to link external kernel functions. It must not contain an implementation body (`.adb`).
+* **Memory & SPARK Constraints:** Not Applicable for an implementation body. Regarding the specification, it handles only primitive scalar types (`uid_t`). The package guarantees no hidden allocations and inherently complies with the Zero-Allocation constraints.
+* **Boundary & Exception Handling:** Not Applicable for an implementation body. This package does not trap exceptions or translate error codes. The POSIX `getuid` function is guaranteed by the OS to always succeed and does not return failure codes.

@@ -51,7 +51,7 @@ The Phase 4 Normalizer for the CLI frontend splits the data flow into two intern
 1.  **The Config Branch:** Normalizes flags into universal `Property_Event` records. These are merged into the `App_Config` to set the global state (e.g., Log Level, Working Directory).
 2.  **The Intent Branch:** Assembles the `Intent_Queue`.
     * If the queue contains **Halting Actions**, the Orchestrator routes directly to a Command Executor.
-    * If it contains **Unresolved Targets**, they are handed over to the **Resolver** (Cluster 6), which transforms this "intent" into the final, mathematically ordered **`Execution_Queue`**.
+    * If it contains **Unresolved Targets**, they are handed over to the **Resolver**, which transforms this "intent" into the final, mathematically ordered **`Execution_Queue`**.
 
 ## 4. Engineering Impact
 This model dictates the implementation of the specialized CLI instantiation of the 5-Phase Pipeline.

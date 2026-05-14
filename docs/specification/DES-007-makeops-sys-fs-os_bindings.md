@@ -24,33 +24,31 @@
 
 ## 2. Traceability & Dependencies
 
-* **Implements Requirements:** `REQ-002` (Operation Orchestration: Pre-flight executability checks).
+* **Implements Requirements:**
+    * `REQ-002` (Operation Orchestration & Execution):
+        * `F-002-006`: Provides the native OS bindings necessary to perform pre-flight executability checks (specifically the `X_OK` mode for `access`) on resolved binaries prior to execution.
 * **Applies Concepts:**
-    * `MOD-007` (Pure Execution OS Boundaries: Thin bindings to C ABI).
-    * `MOD-011` (Isolated OS Boundaries and Exception Handling: Underlying POSIX calls for existence and metadata).
-* **Internal Package Dependencies:** None. Depends solely on standard `Interfaces.C`.
+    * `MOD-007` (Pure Execution OS Boundaries): Defines the requirement for unsafe thin bindings directly mapping to the C ABI.
+    * `MOD-011` (Isolated OS Boundaries and Exception Handling): Establishes the unprovable foundation where POSIX errors are generated before being trapped by the thick wrapper.
+    * `MOD-012` (Execution Context & Security Model): Supplies the fundamental OS directives (`chdir`, `realpath`) required to shift the working directory and resolve the Configuration Anchor.
+* **Internal Package Dependencies:**
+    * None. This package serves as a foundational OS adapter and relies exclusively on standard Ada C-interoperability libraries (`Interfaces.C`, `Interfaces.C.Strings`).
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * Native C types mapped via `Interfaces.C` (e.g., `C.int`, `C.Strings.chars_ptr`).
-    * `X_OK`: A static constant (typically `1` in POSIX/Linux) used as the `mode` mask to check for execute permissions.
+    * `F_OK`, `X_OK`, `R_OK`: Static POSIX constants of type `Interfaces.C.int` used as mode masks to verify file existence, executability, and read permissions, respectively.
 * **Main Subprograms:**
-    * `c_access`: A function matching the POSIX `access(const char *pathname, int mode)` signature. Returns `0` on success (access granted), or `-1` on error.
-    * `c_chdir`: A function matching the POSIX `chdir(const char *path)` signature. Returns `0` on success, or `-1` on error.
-    * `c_getcwd`: A function matching the POSIX `char *getcwd(char *buf, size_t size)` signature. Returns the pointer to the buffer on success, or `null` on error.
-    * `c_realpath`: A function matching the POSIX `char *realpath(const char *path, char *resolved_path)` signature. Returns the pointer to the resolved path on success, or `null` on error.
-* **Invariants & Contracts (Conceptual):**
-    * The package MUST be declared as a `private package` to physically prevent domain logic (like `MakeOps.Core`) from invoking unsafe C file system functions directly.
-    * The specification MUST use `pragma SPARK_Mode (Off)`, as external C functions are inherently unprovable by GNATprove and break Absence of Runtime Errors (AoRE) guarantees.
+    * `c_access`: A thin binding to the POSIX `access` function. Returns `0` on success or `-1` on error.
+    * `c_chdir`: A thin binding to the POSIX `chdir` function. Returns `0` on success or `-1` on error.
+    * `c_getcwd`: A thin binding to the POSIX `getcwd` function. Returns a pointer to the buffer on success, or a null pointer on error.
+    * `c_realpath`: A thin binding to the POSIX `realpath` function. Returns a pointer to the resolved absolute path on success, or a null pointer on error.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the `pragma SPARK_Mode (Off)` constraint. As a thin binding layer directly exposing the Linux C ABI (glibc), it is fundamentally unprovable by GNATprove.
+    * The package MUST be declared as a `private package` (i.e., `private package MakeOps.Sys.FS.OS_Bindings`). This strict boundary isolation mathematically prevents any higher-level domain code (such as `MakeOps.Core`) from accidentally invoking unsafe C functions, restricting its consumption exclusively to its parent thick wrapper.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** A package body (`.adb` file) is strictly NOT required. The functions are linked externally using `pragma Import (C, c_access, "access")`, `pragma Import (C, c_chdir, "chdir")`, `pragma Import (C, c_getcwd, "getcwd")`, and `pragma Import (C, c_realpath, "realpath")`. The `.ads` file is sufficient for defining the types, constants, and the import directives.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** Explicitly excluded (`SPARK_Mode (Off)`).
-* **AUnit Test Scenarios:**
-    * **Direct Testing:** Not required and actively discouraged. Thin bindings should not be unit-tested in isolation as they interact directly with the OS file system.
-    * **Indirect Validation:** Validated entirely through the test suite of its parent thick wrapper (`MakeOps.Sys.FS`), which safely passes converted strings and interprets the integer return codes.
+* **Algorithmic Flow & Models:** Not Applicable. This package acts purely as a declarative thin binding layer to the Linux C ABI. It utilizes `pragma Import (C, ...)` for all its declared subprograms (`c_access`, `c_chdir`, `c_getcwd`, `c_realpath`) and explicitly must not contain an implementation body (`.adb`).
+* **Memory & SPARK Constraints:** Not Applicable for an implementation body. Regarding the specification, it natively passes raw C pointers (`chars_ptr`) and relies on standard C types (`int`, `size_t`). The package guarantees no hidden allocations. The strict lifecycle management of these pointers (allocation and deallocation) is completely delegated to the parent wrapper.
+* **Boundary & Exception Handling:** Not Applicable for an implementation body. This package does not trap exceptions or translate error codes. Native POSIX errors (signaled via `-1` or null pointer returns) must be caught and deterministically degraded by the parent thick wrapper.

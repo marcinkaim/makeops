@@ -25,43 +25,36 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-001` (Project Configuration Handling: streaming the `makeops.toml` file).
-    * `REQ-004` (Global Tool Preferences: streaming `/etc/` and `~/.config/` configurations).
+    * `REQ-001` (Project Configuration):
+        * `NFR-001-002`: Requires the safe, sequential ingestion of configuration files (`makeops.toml`) without loading the entire file into dynamically allocated memory.
 * **Applies Concepts:**
-    * `MOD-009` (Formal Verification & Static Memory Foundations: Bounded strings for file lines).
-    * `MOD-010` (Text Encoding and Raw Byte Bucket Model: Processing files as Raw Byte Buckets).
-    * `MOD-011` (Isolated OS Boundaries and Exception Handling: Exception Isolation and Graceful Degradation).
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Dictates the use of strongly bounded buffers (8192 bytes) and variant records to ensure reading from files never triggers a heap allocation or buffer overflow.
+    * `MOD-010` (Text Encoding and Raw Byte Bucket Model): Treats the incoming file data as raw, unconstrained byte buckets rather than semantic wide characters.
+    * `MOD-011` (Isolated OS Boundaries and Exception Handling): Establishes the exception isolation pattern, translating unpredictable POSIX I/O errors into deterministic `Stream_Status` enumerations.
 * **Internal Package Dependencies:**
-    * `MakeOps.Sys` (for baseline operational types).
-    * `MakeOps.Sys.FS` (for `Path_String` usage when opening files).
+    * `MakeOps.Sys.FS`: Utilized conceptually for the `Path_String` type required to locate the file to be opened.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * `File_Handle`: A limited private type safely encapsulating the internal `Ada.Text_IO.File_Type`. Hiding this prevents the core logic from interacting directly with native I/O streams.
-    * `Max_Line_Length`: A static constant (e.g., `8192`) defining the maximum byte length of a single line parsed from configuration files.
-    * `Line_String`: A bounded string type (capacity `Max_Line_Length`) representing a raw, UTF-8 line buffer.
-    * `Stream_Status`: An enumeration (`Success`, `End_Of_File`, `I_O_Error`) representing the deterministic outcome of I/O operations.
-    * `Read_Result`: A discriminated variant record parameterized by `Stream_Status`. If `Success`, it contains the `Line_String`. If `End_Of_File` or `I_O_Error`, it contains no string data.
+    * `Max_Line_Length`: A static constant (8192 bytes) establishing the absolute maximum memory bound for a single configuration line.
+    * `Line_String`: A bounded string explicitly adhering to the `Max_Line_Length` limit.
+    * `Stream_Status`: An enumeration (`Success`, `End_Of_File`, `I_O_Error`) representing the deterministic outcome of the file operation.
+    * `Read_Result`: A discriminated variant record. It safely encapsulates the `Line_String` only when the status is `Success`, mathematically guaranteeing that consumers cannot access uninitialized memory on EOF or IO errors.
+    * `File_Handle`: A limited private type. It entirely hides the underlying `Ada.Text_IO.File_Type` to prevent the formally verified domain logic from interacting with the unprovable native OS state.
 * **Main Subprograms:**
-    * `Open_File`: A procedure accepting a path and an out-parameter for the `File_Handle`. Returns a `Stream_Status` indicating if the file was successfully opened.
-    * `Get_Next_Line`: A function accepting a `File_Handle` and returning a `Read_Result`. It reads the stream until a newline character is encountered.
-    * `Close_File`: A procedure accepting a `File_Handle` that safely closes the file.
-* **Invariants & Contracts (Conceptual):**
-    * The package specification (`.ads`) MUST be marked with `pragma SPARK_Mode (On)`.
-    * The subprograms MUST guarantee Absence of Runtime Errors (AoRE). They must never propagate native exceptions.
-    * The caller must guarantee that `Close_File` is always invoked if `Open_File` returned `Success`, ensuring deterministic OS resource cleanup even during high-level orchestrator aborts.
+    * `Open_File`: Attempts to open the physical file for reading, returning a deterministic status rather than an exception.
+    * `Get_Next_Line`: Reads sequential text from the open handle up to the bounded limit.
+    * `Close_File`: Safely releases the OS file descriptor.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the global `pragma SPARK_Mode (On)` constraint.
+    * It guarantees the absolute Absence of Runtime Errors (AoRE) to its callers. By hiding the `File_Type` in a limited private record, it mathematically enforces that file handles cannot be copied or maliciously mutated outside of this package's control.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **SPARK / Memory Constraints:** The package must avoid unbounded strings entirely. Use `Ada.Strings.Bounded` to construct the `Line_String`. If `Ada.Text_IO.Get_Line` encounters a line exceeding `Max_Line_Length`, the function must truncate the reading or flush the remainder of the line to prevent buffer overflows, safely returning the truncated data or raising a controlled `I_O_Error`.
-* **OS / POSIX Interactions:** The package body (`.adb`) MUST be marked with `pragma SPARK_Mode (Off)`. It is the sole component utilizing `Ada.Text_IO` for file reads.
-* **Algorithmic Flow:** All calls to `Ada.Text_IO.Open`, `Get_Line`, and `Close` must be wrapped in `begin ... exception when others => ... end` blocks. Specifically, `End_Error` must map cleanly to `End_Of_File`, while `Name_Error` and `Use_Error` map to `I_O_Error`.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** The public interface MUST be verified to ensure it introduces no native Ada exceptions into the calling core parsers, guaranteeing safe, deterministic data flow records (`Read_Result`).
-* **AUnit Test Scenarios:**
-    * **Happy Path:** `Open_File` an existing temporary test file, successfully invoke `Get_Next_Line` to retrieve the contents, and verify `Close_File` executes without issues.
-    * **Edge Cases:** Calling `Get_Next_Line` on an empty file immediately returns a `Read_Result` with `End_Of_File` status instead of throwing an exception.
-    * **Error Paths:** Calling `Open_File` on a non-existent path gracefully returns `I_O_Error`.
+* **Algorithmic Flow & Models:** The implementation serves as a memory-bounded, exception-free facade over standard Ada file I/O. It rigorously tracks internal state to prevent resource leaks and translates all native exceptions into deterministic variant records to uphold the Absence of Runtime Errors (AoRE) boundary.
+    * `Open_File`: Must implement a Fail-Fast check to immediately return an `I_O_Error` if the provided handle is already marked as open, preventing descriptor leaks. It invokes `Ada.Text_IO.Open` and must trap all native exceptions (`Name_Error`, `Use_Error`), degrading gracefully to an error status without halting execution.
+    * `Get_Next_Line`: Must fail-fast if the handle is closed or if `Ada.Text_IO.End_Of_File` is true. It reads data into a statically bounded string buffer using `Ada.Text_IO.Get_Line`. Critically, if the read data exactly fills the maximum buffer length, it must proactively invoke `Ada.Text_IO.Skip_Line` (if not at EOF) to flush any unread remainder of the truncated line, preventing byte-offset misalignment during subsequent read operations.
+    * `Close_File`: Must perform an idempotent closure. It attempts to invoke `Ada.Text_IO.Close` only if the internal flag indicates the file is open. Regardless of whether the native OS operation succeeds or raises an exception (which must be trapped), it must deterministically reset the internal state flag to `False` to prevent reuse of the stale handle.
+* **Memory & SPARK Constraints:** The package enforces the Static Memory Model (`MOD-009`). All string reads are pulled directly into fixed-size stack arrays without utilizing the `new` keyword or unbounded standard libraries.
+* **Boundary & Exception Handling:** The package body MUST be marked with `pragma SPARK_Mode (Off)`. It wraps every `Ada.Text_IO` operation in a defensive block. `Name_Error` and `Use_Error` during opening are translated to `I_O_Error`. Unpredictable `End_Error` exceptions during reading are smoothly caught and degraded into the `End_Of_File` status variant, completely isolating the core parsing engine from Ada's native exception propagation.

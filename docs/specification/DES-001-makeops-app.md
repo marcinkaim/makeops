@@ -23,26 +23,25 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-003` (F-003-002: Execution observability and logging levels).
+    * `REQ-003` (Execution Observability):
+        * `F-003-002`: Defines the visual verbosity levels (logging levels) used to control diagnostic output granularity across the application.
 * **Applies Concepts:**
-    * `MOD-016` (Observability and Visual Taxonomy Model).
-* **Internal Package Dependencies:** None. This is the foundation of the App subsystem.
+    * `MOD-016` (Observability and Visual Taxonomy Model): Establishes the foundational data types (e.g., `Log_Level` enumeration) required to enforce the "Neutral Happy Path" and route or suppress terminal streams dynamically.
+* **Internal Package Dependencies:**
+    * None. This package serves as the foundational root for the Application Layer and must not depend on any internal MakeOps units.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
     * `Log_Level`: An enumeration defining the diagnostic output granularity. Strictly limited to `Error`, `Info`, and `Debug`.
 * **Main Subprograms:**
-    * None.
-* **Invariants & Contracts (Conceptual):**
-    * The package MUST be marked with `pragma Preelaborate`. This allows the types and constants to be used early during the program's elaboration phase, while offering more flexibility than `pragma Pure` for future child packages (like `MakeOps.App.Logging`) that may need to maintain internal state or perform I/O.
+    * None. This package acts exclusively as a declarative provider of application-layer types.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the `pragma Preelaborate` constraint. This allows the types and constants to be safely utilized early during the program's elaboration phase, providing more flexibility than `pragma Pure` for future child packages (like `MakeOps.App.Logger`) that may maintain internal state.
+    * It maintains no mutable global state. The rigorous domain invariant is enforced natively through the type system—the `Log_Level` enumeration guarantees that the configuration state can only hold one of the strictly assigned values, making mathematically undefined verbosity levels impossible.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** A package body (`.adb` file) is strictly NOT required and MUST NOT be created. The specifications in the `.ads` file are entirely sufficient for defining these static types and constants.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** Automatically proven. The declarations contain no complex logic or dynamic bounds, satisfying Absence of Runtime Errors (AoRE).
-* **AUnit Test Scenarios:**
-    * **Happy Path:** A trivial sanity test ensuring that the `Log_Level` enumeration is ordered correctly (e.g., `Error < Info` and `Info < Debug`) to support relational comparisons in logging and output filtering logic.
+* **Algorithmic Flow & Models:** Not Applicable. This package acts as a declarative namespace for foundational application types and must not contain an implementation body (`.adb`).
+* **Memory & SPARK Constraints:** Not Applicable for an implementation body. Regarding the specification, it guarantees a constant, minimal memory footprint and a complete absence of dynamic heap allocation during runtime.
+* **Boundary & Exception Handling:** Not Applicable. The package contains no executable algorithms and crosses no external OS boundaries.

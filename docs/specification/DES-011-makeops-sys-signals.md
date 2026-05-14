@@ -24,34 +24,28 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-002` (Operation Orchestration & Execution: Graceful termination upon user interrupt).
+    * `REQ-002` (Operation Orchestration & Execution):
+        * Provides the asynchronous signaling mechanism necessary to halt the execution sequence gracefully upon user interrupt (e.g., via Ctrl+C).
 * **Applies Concepts:**
-    * `MOD-008` (System Signal Routing: Using `Ada.Interrupts` and protected objects).
-    * `MOD-009` (Formal Verification & Static Memory Foundations: Deterministic polling of boolean flags instead of asynchronous hardware mutations).
-* **Internal Package Dependencies:** None. This is a foundational subsystem component.
+    * `MOD-008` (System Signal Routing): Explains the use of `Ada.Interrupts` and protected objects to safely catch `SIGINT` and `SIGTERM` signals without deadlocking the main execution loop.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Requires deterministic polling of a boolean flag instead of allowing asynchronous hardware mutations to leak into the verified core logic.
+* **Internal Package Dependencies:**
+    * None. This is a foundational subsystem component relying exclusively on standard Ada libraries (`Ada.Interrupts.Names`).
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * None. The internal state (the abort flag) is strictly hidden from the public interface to guarantee encapsulation.
+    * None. The internal state (the abort flag) is strictly hidden from the public interface to guarantee complete encapsulation.
 * **Main Subprograms:**
-    * `Abort_Requested`: A parameterless function returning a `Boolean`. Returns `True` if a termination signal (such as `SIGINT` or `SIGTERM`) has been caught since the application started, and `False` otherwise.
-* **Invariants & Contracts (Conceptual):**
-    * The package specification (`.ads`) MUST be marked with `pragma SPARK_Mode (On)`.
-    * The `Abort_Requested` function MUST be mathematically proven to be free of race conditions and must provide atomic reads.
+    * `Abort_Requested`: Returns a boolean indicating whether a termination signal (`SIGINT` or `SIGTERM`) has been caught since the application started. It guarantees an atomic, thread-safe read.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the `pragma SPARK_Mode (On)` constraint.
+    * The specification MUST include `pragma Unreserve_All_Interrupts` at the library level to grant the application exclusive control over hardware signal handling.
+    * The domain invariant mathematically guarantees that checking for aborts is a pure, race-condition-free read operation that does not expose the underlying concurrency primitives (protected objects) to the calling domain.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** The package body (`.adb`) is required and MUST manage the actual Ada concurrency primitives. It may be marked with `pragma SPARK_Mode (Off)` if the specific `Ada.Interrupts.Names` mappings cause verification issues with GNATprove.
-* **Protected Object Architecture:**
-    * The body MUST declare a `protected` object (e.g., `Signal_Handler`) to encapsulate a boolean variable (e.g., `Is_Aborted` initialized to `False`).
-    * The protected object MUST contain procedure(s) to handle the interrupts (e.g., `Handle_Signal`), attached to the respective POSIX signals using multiple directives: `pragma Attach_Handler (Handle_Signal, Ada.Interrupts.Names.SIGINT)` and `pragma Attach_Handler (Handle_Signal, Ada.Interrupts.Names.SIGTERM)`.
-    * When the handler is triggered by the OS, it simply sets `Is_Aborted := True`.
-* **Flow Control:** The public `Abort_Requested` function merely calls a protected function inside the `Signal_Handler` to safely read the `Is_Aborted` value, ensuring zero locks or deadlocks during the hot execution loop.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** The public interface MUST be verified to ensure that calling `Abort_Requested` has no side effects and safely abstracts the underlying protected object.
-* **AUnit Test Scenarios:**
-    * **Direct Testing Limitations:** Hardware interrupts are notoriously difficult to test deterministically in standard unit test runners like AUnit without mocking the interrupt controller.
-    * **Validation:** Verification of this package is generally deferred to integration testing. However, a dummy routine can be exposed (e.g., `Simulate_Interrupt` available only in the test profile) to trigger the protected object and verify that `Abort_Requested` correctly flips from `False` to `True`.
+* **Algorithmic Flow & Models:** The implementation encapsulates an internal protected object (e.g., `Signal_Handler`) that intercepts hardware interrupts (`SIGINT`, `SIGTERM`) and asynchronously mutates a private, atomic boolean abort flag.
+    * `Abort_Requested`: Must serve as a deterministic, non-blocking getter. It delegates the read operation to the internal protected object, guaranteeing a thread-safe evaluation of the abort flag without exposing the underlying Ada concurrency primitives to the pure orchestration loop.
+* **Memory & SPARK Constraints:** The package enforces the Static Memory Model, requiring zero dynamic memory allocation (Zero-Allocation). The single boolean state flag is statically allocated within the protected object.
+* **Boundary & Exception Handling:** The package body MUST be marked with `pragma SPARK_Mode (Off)`. Hardware interrupts and native concurrency pragmas inherently break the strict deterministic mathematical models required by GNATprove. This boundary ensures that the unprovable, asynchronous delivery of signals never corrupts the mathematically verified data flow of the orchestrator.

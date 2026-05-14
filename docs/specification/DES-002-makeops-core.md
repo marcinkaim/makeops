@@ -24,28 +24,28 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-000` (Foundational pure logic architecture).
-    * `REQ-002` (Operation Orchestration base data types).
+    * `REQ-000` (System Constraints):
+        * `F-000-001`: Provides the foundational pure logic architecture and base types for standard POSIX exit status mappings.
+    * `REQ-002` (Operation Orchestration & Execution):
+        * `F-002-001`: Defines the fundamental domain types required for identifying and tracking operational targets within the orchestration engine.
 * **Applies Concepts:**
-    * `MOD-009` (Formal Verification & Static Memory Foundations: Algorithmic exceptions vs. deterministic implementation, strong typing via specific integer derivations).
-* **Internal Package Dependencies:** None. This is the foundation of the Core subsystem and depends only on the standard Ada library.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Utilizes strong typing and specific integer derivations to enforce algorithmic determinism and replace native Ada exceptions with verifiable return types.
+* **Internal Package Dependencies:**
+    * None. This is the root namespace of the Core subsystem and depends only on the standard Ada library.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * `ID_Type`: A specific bounded integer derivation (`new Integer`). Enforces strong typing to prevent accidental mixing with standard integers when handling graph vertices and internal counters.
-    * `Operation_Result`: An enumeration (`Success`, `Failure`, `Pending`) representing the deterministic outcome of core operations. It is critical for the "Fail-Fast" architecture, avoiding the use of `Ada.Exceptions` for standard control flow.
+    * `ID_Type`: A specific bounded integer derivation used as a universal identifier for graph node indexing and internal calculations, preventing accidental mixing with standard integers.
+    * `Operation_Result`: An enumeration (`Success`, `Failure`, `Pending`) representing the deterministic outcome of core business logic operations.
 * **Main Subprograms:**
-    * None.
-* **Invariants & Contracts (Conceptual):**
-    * The package MUST be marked with `pragma Pure`. This guarantees to the compiler and the SPARK prover that the package contains no hidden state, making it completely deterministic and safe for concurrent elaboration if needed.
+    * None. This package serves exclusively as a declarative provider of foundational domain types.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the `pragma Pure` constraint.
+    * It mathematically guarantees to the SPARK prover a complete absence of hidden state, variables, or side effects. The use of the `Operation_Result` enumeration ensures that undefined operational outcomes are mathematically impossible, satisfying the "Fail-Fast" architectural requirements.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** A package body (`.adb` file) is strictly NOT required and MUST NOT be created. The specifications in the `.ads` file are entirely sufficient for defining these foundational types.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** Automatically proven. The `pragma Pure` directive combined with static type declarations natively satisfies SPARK's Absence of Runtime Errors (AoRE) requirement.
-* **AUnit Test Scenarios:**
-    * **Happy Path:** A trivial sanity test ensuring the `Operation_Result` values are distinct and properly ordered if relied upon in generic evaluations.
+* **Algorithmic Flow & Models:** Not Applicable. This package acts as a pure declarative namespace for foundational domain types and must not contain an implementation body (`.adb`).
+* **Memory & SPARK Constraints:** Not Applicable for an implementation body. Regarding the specification, it strictly enforces the Static Memory Model by providing type blueprints that do not consume heap memory and guarantee zero dynamic memory allocation at runtime (Zero-Allocation).
+* **Boundary & Exception Handling:** Not Applicable. This package establishes the "Functional Core" boundary by defining the types used to isolate higher-level logic from native Ada exceptions.

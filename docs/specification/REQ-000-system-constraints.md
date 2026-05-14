@@ -24,6 +24,7 @@
 
 * **F-000-001:** The system SHALL communicate with the operating system through standard exit codes (e.g., `Exit_Success`, `Exit_Failure`) defined in the `makeops-sys.ads` package.
 * **F-000-002:** The system SHALL execute operations via explicit binary and script invocations with strictly passed arguments, without utilizing embedded shell scripts.
+* **F-000-003:** The system SHALL securely identify the OS-level execution context (User ID) upon startup to detect and prevent execution with superuser (root) privileges, safeguarding against accidental workspace pollution.
 
 ## 3. System Constraints & Quality Attributes (NFRs)
 *Fundamental technological and architectural constraints for the entire project.*

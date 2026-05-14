@@ -25,6 +25,8 @@
 * **F-002-003:** The system SHALL ensure that any given operation within the dependency chain is executed exactly once per run, even if multiple operations depend on it.
 * **F-002-004:** The system SHALL dynamically substitute declared environment variables (e.g., `${VAR_NAME}`) within the operation's `cmd` and `args` definitions for the entire resolved execution queue prior to spawning any processes, ensuring a "Fail-Fast" behavior for missing or circular variables.
 * **F-002-005:** The system SHALL immediately halt the execution sequence if any invoked operation returns a non-zero exit code.
+* **F-002-006:** The system SHALL perform a pre-flight executability check on the resolved binary path prior to attempting process spawning, immediately halting execution if the file lacks POSIX execution (`+x`) permissions.
+* **F-002-007:** The system SHALL enforce configurable execution time limits (timeouts) on spawned operations, automatically terminating any process that exceeds its defined duration to prevent orchestration deadlocks.
 
 ## 3. System Constraints & Quality Attributes (NFRs)
 * **NFR-002-001 (Pure Execution):** The system MUST execute the defined `cmd` binary directly via operating system process bindings (POSIX). It MUST NOT invoke an intermediate shell (e.g., `/bin/sh -c`) to parse the command.

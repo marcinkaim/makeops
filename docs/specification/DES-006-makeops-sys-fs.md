@@ -28,41 +28,39 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-002` (Operation Orchestration: pre-flight checks before process spawning).
+    * `REQ-002` (Operation Orchestration & Execution):
+        * `F-002-006`: Requires pre-flight executability checks to ensure target binaries possess adequate permissions before attempting process spawning.
+    * `REQ-004` (Global Tool Preferences):
+        * `F-004-007`: Demands safe, non-crashing existence checks for optional preference files during the Configuration Cascade.
 * **Applies Concepts:**
-    * `MOD-009` (Formal Verification & Static Memory Foundations: Translating native exceptions to variant records).
-    * `MOD-011` (Isolated OS Boundaries and Exception Handling: Exception Isolation).
-    * `MOD-012` (Execution Context & Security Model: Path resolution and CWD management).
-* **Internal Package Dependencies:** None. This is the foundation of the OS boundary subsystem.
+    * `MOD-011` (Isolated OS Boundaries and Exception Handling): Dictates the translation of unpredictable POSIX/Ada filesystem errors into deterministic variant types to support Graceful Degradation.
+    * `MOD-012` (Execution Context & Security Model): Establishes the requirement for managing the Current Working Directory (CWD) and resolving the Configuration Anchor via absolute paths.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Requires that all path data passed through the OS boundary adheres strictly to the statically bounded `Path_String` constraints.
+* **Internal Package Dependencies:**
+    * `MakeOps.Sys.FS.OS_Bindings`: Provides the unsafe C ABI thin bindings to POSIX filesystem functions (`access`, `chdir`, `getcwd`, `realpath`).
+    * `Ada.Directories`: Utilized exclusively for pure string manipulation (extracting containing directories) without invoking native I/O exceptions.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * `Max_Command_Length`: A static constant (4096) defining the maximum byte length of a file path or executable command.
-    * `Path_String`: A bounded string type (capacity `Max_Command_Length`) for storing file system paths and commands.
-    * `FS_Status`: An enumeration (`Success`, `Not_Found`, `Permission_Denied`) representing the deterministic outcome of file system queries.
+    * `FS_Status`: An enumeration (`Success`, `Not_Found`, `Permission_Denied`) representing the deterministic outcome of file system existence and accessibility queries.
 * **Main Subprograms:**
-    * `Check_File_Access`: A function accepting a path (bounded string) and returning `FS_Status`. Used by the Configuration Cascade to safely probe optional preference files.
-    * `Is_Executable`: A function accepting a path and returning a `Boolean`. Used by the Master Orchestration Pipeline as a pre-flight check before calling `execvp`.
-    * `Change_Directory`: A function accepting a path (bounded string) and returning `FS_Status`. Used during CLI initialization to set the execution context.
-    * `Get_Current_Directory`: A function returning the absolute path (`Path_String`) of the current working directory.
-    * `Get_Absolute_Directory_Path`: A function accepting a file path and returning the absolute path (`Path_String`) to its parent directory. Used to establish the Configuration Anchor.
-* **Invariants & Contracts (Conceptual):**
-    * The package specification (`.ads`) MUST be marked with `pragma SPARK_Mode (On)`. All subprograms must guarantee Absence of Runtime Errors (AoRE) and return deterministic status values.
+    * `Check_File_Access`: Safely probes a path for physical existence and read permissions, supporting the fallback mechanism for optional configuration files.
+    * `Is_Executable`: Performs a mathematical pre-flight check to verify if a resolved binary path possesses POSIX execution (`+x`) permissions.
+    * `Change_Directory`: Safely shifts the process's working directory to establish the Execution Context.
+    * `Get_Current_Directory`: Retrieves the absolute path of the environment's current working directory.
+    * `Get_Absolute_Directory_Path`: Resolves symlinks and translates a given file path into its absolute containing directory, establishing the Configuration Anchor.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the global `pragma SPARK_Mode (On)` constraint.
+    * It mathematically guarantees to the orchestration core that interacting with the volatile host filesystem will never raise a native Ada exception. Unpredictable environmental states are fully encapsulated within the deterministic `FS_Status` and boolean return types.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** The package body (`.adb`) MUST be marked with `pragma SPARK_Mode (Off)`.
-* **OS / Standard Library Interactions:**
-    * To implement `Check_File_Access`, use a Thin Binding to the POSIX C function `access(path, mode)` with constants `F_OK` and `R_OK` to guarantee accurate existence and read permission resolution under Linux, cleanly distinguishing between `Not_Found` and `Permission_Denied`.
-    * To implement `Is_Executable`, Ada's standard library may lack direct POSIX execution permission checks. It is acceptable and recommended to use a Thin Binding to the POSIX C function `access(path, X_OK)` to guarantee accurate permission resolution under Linux.
-    * To implement `Change_Directory`, use the Thin Binding to the POSIX C function `chdir(path)`. Map the integer return code to `FS_Status`.
-    * To implement `Get_Current_Directory` and `Get_Absolute_Directory_Path`, use the Thin Bindings to the POSIX C functions `getcwd` and `realpath` respectively.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** The interface must be fully proven to allow safe consumption by `MakeOps.Core.Pipeline` and `MakeOps.Core.Config.Cascade`.
-* **AUnit Test Scenarios:**
-    * **Happy Path:** `Resolve_User_Config_Path` correctly builds a path using the injected XDG environment. `Check_File_Access` returns `Success` for a known existing file (e.g., the test executable itself).
-    * **Edge Cases:** `Check_File_Access` gracefully returns `Not_Found` for a non-existent file without raising an exception.
-    * **Error Paths:** Create a temporary file, remove its execute permissions via OS tools, and assert `Is_Executable` returns `False`.
+* **Algorithmic Flow & Models:** The implementation relies on underlying POSIX thin bindings rather than native Ada I/O libraries to guarantee precise Linux permission resolution. It must actively manage memory allocation and deallocation (`New_String`, `Free`) across the C ABI boundary for every operation.
+    * `Check_File_Access`: Must sequentially invoke the POSIX `c_access` binding. It first uses the `F_OK` mask to strictly verify physical existence (returning `Not_Found` if missing), followed by the `R_OK` mask to verify read permissions (returning `Success` or `Permission_Denied`).
+    * `Is_Executable`: Must invoke the POSIX `c_access` binding strictly using the `X_OK` mask, mapping the integer result directly to a deterministic boolean value (degrading to `False` on any failure).
+    * `Change_Directory`: Must invoke the POSIX `c_chdir` binding to shift the process environment, mapping a successful execution to `Success` and safely degrading any other OS error to a generic `Not_Found` status.
+    * `Get_Current_Directory`: Must pre-allocate a fixed-size C-string buffer (bounded by `Max_Command_Length`) before invoking `c_getcwd`. It must safely evaluate the returned pointer, converting valid data back into an Ada bounded string and yielding an empty bounded string if the OS returns a null pointer.
+    * `Get_Absolute_Directory_Path`: Must invoke `c_realpath` to natively resolve symlinks into a pre-allocated C-string buffer. Once the absolute file path is securely retrieved from the OS, it must utilize `Ada.Directories.Containing_Directory` solely for its safe string-manipulation capabilities to extract and return the parent directory path.
+* **Memory & SPARK Constraints:** The package enforces the Static Memory Model (`MOD-009`) by returning only bounded `Path_String` structures. When interacting with the C ABI, the implementation MUST actively manage memory boundaries by allocating `chars_ptr` objects (`New_String`), passing them to the OS, and explicitly invoking `Free` immediately after use to mathematically prevent memory leaks at the Ada-to-C boundary.
+* **Boundary & Exception Handling:** The package body MUST be marked with `pragma SPARK_Mode (Off)`. To enforce the Absence of Runtime Errors (AoRE) defined in `MOD-011`, all subprograms MUST wrap their native string translations and C-ABI calls in global exception traps (`when others`). Any failure during path resolution or OS querying must degrade gracefully into deterministic fallback states (e.g., returning `Not_Found`, `False`, or an empty `Null_Bounded_String`).

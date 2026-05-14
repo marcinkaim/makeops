@@ -15,7 +15,7 @@ package body MakeOps.Tests.Base is
 
    function Name (T : Test_Case) return AUnit.Message_String is
    begin
-      return AUnit.Format ("Base Packages (Cluster 0) Tests");
+      return AUnit.Format ("Base Packages Tests");
    end Name;
 
    procedure Register_Tests (T : in out Test_Case) is

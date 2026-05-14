@@ -24,29 +24,25 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-000` (AC-000-002: All unit tests run successfully and return a passing result).
+    * `REQ-000` (System Constraints):
+        * `NFR-000-005`: Enforces the use of the AUnit framework for unit testing and dictates the isolation of the build process via a dedicated GPR configuration.
 * **Applies Concepts:**
-    * `MOD-009` (Formal Verification & Static Memory Foundations: Unit tests serve as the empirical validation layer, complementing static mathematical proofs).
-* **Internal Package Dependencies:** Depends on all `MakeOps.*` packages that require empirical testing.
-* **External Dependencies:** The `AUnit` framework.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Clarifies that while the core system targets AoRE, the testing infrastructure itself operates outside strict formal proof boundaries to enable robust empirical validation.
+* **Internal Package Dependencies:**
+    * `MakeOps.Tests.Base` through `MakeOps.Tests.Sys_File_Stream`: Imports child unit test packages in order to aggregate their individual test cases into the master execution suite.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * None.
+    * None. This package serves exclusively as a declarative namespace and entry point for the testing suite.
 * **Main Subprograms:**
-    * `Suite`: A function returning an `AUnit.Test_Suites.Access_Test_Suite`. This is the master function called by the `test_runner` to obtain the complete tree of all registered unit tests in the project.
-* **Invariants & Contracts (Conceptual):**
-    * The testing infrastructure is exempt from the `pragma Pure` and strict SPARK AoRE constraints, as it is not part of the production `mko` binary.
+    * `Suite`: Instantiates and returns the master `AUnit.Test_Suites.Access_Test_Suite` containing all registered unit tests for the MakeOps project.
+* **Formal Contracts & Invariants (SPARK):**
+    * This package is explicitly excluded from the SPARK formal verification boundary. It does not enforce `pragma Pure` or `pragma Preelaborate`, as it serves as an aggregation point for the AUnit framework, which inherently requires dynamic state management and object-oriented dispatching.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** The package body (`.adb`) is responsible for instantiating the master `Test_Suite` object and dynamically adding child suites (e.g., `MakeOps.Tests.Lexer.Suite`) as they are developed.
-* **Execution Context:** This package is explicitly executed via `source/tests/test_runner.adb` and compiled using the `makeops_tests.gpr` project file.
-* **Compiler Constraints:** Ensure that the test runner is always compiled with assertions enabled (`-gnata`) so that internal `pragma Assert` statements within the tested packages are actively evaluated during the test run.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** Not required. SPARK verification is typically disabled or ignored for the AUnit test harnesses.
-* **AUnit Test Scenarios:**
-    * **Happy Path:** Running the compiled `test_runner` binary (via `make test`) returns an exit code of `0`, confirming that the test suite is properly wired and all registered tests pass.
+* **Algorithmic Flow & Models:** The implementation serves as the central registration hub for the empirical testing framework, utilizing a single, linear initialization sequence.
+    * `Suite`: Instantiates the root AUnit test suite object. It must sequentially aggregate and register the test cases from all imported child packages (e.g., `Base`, `Sys_Env`, `Sys_FS`) by appending their statically allocated access pointers to the master suite builder.
+* **Memory & SPARK Constraints:** While the testing infrastructure is exempt from the strict system-wide Zero-Allocation constraints, it still minimizes heap usage where possible. Individual test cases MUST be statically instantiated as `aliased` variables at the package body level. Dynamic memory allocation (using the `new` keyword) is strictly limited to the creation of the root `Test_Suite` object itself to satisfy AUnit framework architectural requirements.
+* **Boundary & Exception Handling:** Not Applicable. The package operates entirely within the isolated AUnit test execution context and does not interact directly with native OS boundaries or perform exception translation.

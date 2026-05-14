@@ -86,14 +86,14 @@ Documents translating the spatial architecture into a time vector by organizing 
 ## Documentation - Architectural Package Designs (Phase 5)
 Normative documents developed in accordance with the Specification-Driven Development (SDD) methodology, serving as the "glue" between Requirements (REQ), Conceptual Models (MOD), and the actual code. They define package responsibility boundaries, interface semantics, implementation guidelines (especially at the intersection of strict SPARK constraints and the operating system), and formal verification strategies.
 
-**Base Packages (Cluster 0):**
+**Base Packages (Stage 0):**
 - `docs/specification/DES-000-makeops.md`: Design of the absolute root namespace package for the MakeOps software suite. It establishes global project identity and static metadata while strictly enforcing the `pragma Pure` constraint to guarantee zero hidden state across all child subsystems.
 - `docs/specification/DES-001-makeops-app.md`: Design of the root namespace for the Application Layer. It defines foundational types representing the global application state, specifically establishing the strict `Log_Level` enumeration (Error, Info, Debug) used to control diagnostic output granularity.
 - `docs/specification/DES-002-makeops-core.md`: Design of the foundational layer for the core business logic and orchestration engine. It defines platform-independent domain types, enforcing a "Functional Core" architecture that replaces native Ada exceptions with deterministic, mathematically verifiable return types (e.g., `Operation_Result`).
 - `docs/specification/DES-003-makeops-sys.md`: Design of the root namespace and foundational abstraction layer for all Operating System and hardware interactions. It introduces controlled boundaries for unrecoverable hardware exceptions (`System_Error`) and defines standard POSIX exit codes and system error mappings.
 - `docs/specification/DES-004-makeops-tests.md`: Design of the root namespace and main aggregation point for the AUnit testing infrastructure. It defines the master test suite and provides the entry point for the standalone `test_runner` executable, operating outside the strict SPARK constraints.
 
-**OS & Memory Foundations (Cluster 1):**
+**OS & Memory Foundations (Stage 1):**
 - `docs/specification/DES-005-makeops-sys-env.md`: Design of the safe OS Facade for querying host environment variables. It enforces Graceful Degradation by trapping native Ada exceptions and translating them into deterministic `Env_Result` variant records, strictly guaranteeing the Absence of Runtime Errors (AoRE).
 - `docs/specification/DES-006-makeops-sys-fs.md`: Design of the exception-free file system adapter. It manages standard Linux path resolution (XDG Base Directory Specification), safe working directory transitions (`chdir`), and Pre-flight Executability Checks without propagating native I/O exceptions into the pure core.
 - `docs/specification/DES-007-makeops-sys-fs-os_bindings.md`: Design of the private, unsafe "Thin Binding" layer to the Linux kernel and `glibc`. It explicitly opts out of SPARK verification (`SPARK_Mode (Off)`) to map raw POSIX C functions (e.g., `access`, `chdir`, `realpath`) to Ada equivalents for internal consumption by the `MakeOps.Sys.FS` wrapper.

@@ -24,33 +24,32 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-000` (F-000-001: Standard POSIX exit codes and system constraints).
-    * `REQ-003` (F-003-004: Execution exit status).
+    * `REQ-000` (System Constraints):
+        * `F-000-001`: Defines the standard POSIX exit codes and the base system exception necessary to communicate with the host operating system.
+    * `REQ-003` (Execution Observability):
+        * `F-003-004`: Provides the distinct `Exit_Code` data type used to report the final execution status of the orchestrator to the environment.
 * **Applies Concepts:**
-    * `MOD-008` (System Signal Routing and Exit Codes).
-    * `MOD-009` (Formal Verification & Static Memory Foundations: AoRE constraints).
-    * `MOD-011` (Isolated OS Boundaries and Exception Handling: OS Facades).
-* **Internal Package Dependencies:** None. This is the foundation of the OS boundary subsystem.
+    * `MOD-008` (System Signal Routing): Establishes the static constants (`Exit_Success`, `Exit_Failure`) representing standardized POSIX exit statuses required for consistent pipeline integration.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Enforces strong typing for error codes to prevent mixing them with standard operational integers, supporting the overall AoRE architecture.
+    * `MOD-011` (Isolated OS Boundaries and Exception Handling): Defines the baseline `System_Error` exception serving as the ultimate fallback mechanism for unrecoverable hardware or OS-level panics.
+* **Internal Package Dependencies:**
+    * None. This is the absolute foundation of the Operating System boundary subsystem (`MakeOps.Sys`) and relies exclusively on the standard Ada library.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * `System_Error`: A native Ada exception. It represents a catastrophic, unrecoverable failure originating from the OS or kernel (e.g., hardware fault, complete memory exhaustion). 
-    * `System_Error_Code`: An integer type designed to map directly to standard Linux `errno` values, allowing child packages to propagate specific kernel diagnostics if needed.
-    * `Exit_Code`: A distinct integer type mapping to POSIX system exit statuses.
-    * `Exit_Success`: A static constant representing successful termination (POSIX `0`).
-    * `Exit_Failure`: A static constant representing generic failure termination (POSIX `1`).
+    * `System_Error`: A native Ada exception representing a catastrophic, unrecoverable failure originating from the OS or kernel (e.g., hardware fault, complete memory exhaustion).
+    * `System_Error_Code`: An integer type designed to map directly to standard Linux `errno` values.
+    * `Exit_Code`: A distinct, strongly typed integer mapping to POSIX system exit statuses.
+    * `Exit_Success` / `Exit_Failure`: Static constants representing successful termination (POSIX `0`) and generic failure termination (POSIX `1`).
 * **Main Subprograms:**
-    * None.
-* **Invariants & Contracts (Conceptual):**
-    * The package MUST be marked with `pragma Preelaborate`. This prepares the data structures at link-time and allows child packages to safely depend on these types while implementing their own non-pure I/O operations.
+    * None. This package serves exclusively as a declarative provider of foundational system types.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the `pragma Preelaborate` constraint, ensuring safe, deterministic data structure preparation at link-time without initialization side effects.
+    * Domain invariants are strictly enforced through strong typing (e.g., preventing `Exit_Code` from being conflated with standard integers). The package provides a pure static baseline and does not ingest or mutate any external state.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** A package body (`.adb` file) is strictly NOT required and MUST NOT be created for this root namespace package. The declarations in the `.ads` file are entirely sufficient.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** Automatically proven. The declarations contain no complex logic, satisfying Absence of Runtime Errors (AoRE).
-* **AUnit Test Scenarios:**
-    * **Happy Path:** A trivial sanity test ensuring that `System_Error_Code` can hold typical POSIX `errno` ranges (e.g., positive integers).
+* **Algorithmic Flow & Models:** Not Applicable. This is a foundational namespace package for system abstractions and must not contain an implementation body (`.adb`).
+* **Memory & SPARK Constraints:** Not Applicable for an implementation body. Regarding the specification, all defined types are static scalars or exceptions, strictly complying with the Zero-Allocation constraints.
+* **Boundary & Exception Handling:** Not Applicable for an implementation body. However, the `System_Error` declared in the specification serves as the primary boundary abstraction used by child packages (e.g., `MakeOps.Sys.Processes`) to signal unrecoverable OS panics that fall outside the bounds of graceful degradation.

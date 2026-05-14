@@ -24,27 +24,27 @@
 ## 2. Traceability & Dependencies
 
 * **Implements Requirements:**
-    * `REQ-000` (Serves as the foundational unit for the system architecture).
+    * `REQ-000` (System Constraints):
+        * `NFR-000-001`: Ensures the root package complies with Ada 2022 standards by establishing a clean, purely declarative namespace.
+        * `NFR-000-002`: Sets the absolute baseline for formal SPARK verification by enforcing mathematically pure states at the very top of the dependency tree.
 * **Applies Concepts:**
-    * `MOD-009` (Strict adherence to SPARK constraints via package purity).
-* **Internal Package Dependencies:** None. This is the root package; it must not depend on any other unit.
+    * `MOD-009` (Formal Verification & Static Memory Foundations): Establishes the absolute purity constraint at the root of the hierarchy to guarantee zero hidden state, enabling seamless Absence of Runtime Errors (AoRE) proofs across all child namespaces.
+* **Internal Package Dependencies:**
+    * None. This is the absolute root package of the MakeOps architecture and must not depend on any internal units.
 
 ## 3. Interface Semantics (.ads Contract)
 
 * **Core Types & State:**
-    * `Name`: A static string constant holding the formal name of the software ("MakeOps").
-    * `Version`: A static string constant holding the current build/release version (e.g., "0.1.0-alpha").
+    * `Name`: A static string constant holding the formal name of the software suite (e.g., "MakeOps").
+    * `Version`: A static string constant holding the current build or release version.
 * **Main Subprograms:**
-    * None.
-* **Invariants & Contracts (Conceptual):**
-    * The package MUST be marked with `pragma Pure`. This guarantees to the compiler and the SPARK prover that the package contains no hidden state, no variables, and safely allows universal elaboration across all child subsystems.
+    * None. This package acts exclusively as a declarative metadata provider.
+* **Formal Contracts & Invariants (SPARK):**
+    * The package specification MUST be marked with the global `pragma Pure` constraint.
+    * It mathematically guarantees to the GNATprove formal verification engine a complete absence of hidden state, side effects, and external data flow dependencies. The domain invariant relies entirely on the absolute immutability of the exposed string constants.
 
 ## 4. Implementation Guidelines (.adb details)
 
-* **Implementation Scope:** A package body (`.adb` file) is strictly NOT required and MUST NOT be created. The specifications in the `.ads` file are entirely sufficient for static constants.
-
-## 5. Verification Strategy
-
-* **Static Proof (GNATprove):** Automatically proven. The `pragma Pure` directive natively satisfies SPARK's Absence of Runtime Errors (AoRE) requirement for this unit.
-* **AUnit Test Scenarios:**
-    * **Happy Path:** A trivial test in the suite ensuring that the `Version` string length is greater than 0, preventing accidental releases with empty version metadata.
+* **Algorithmic Flow & Models:** Not Applicable. This package acts as a pure declarative namespace and must not contain an implementation body (`.adb`).
+* **Memory & SPARK Constraints:** Not Applicable for an implementation body. Regarding the specification, the static string constants must have a fixed, compile-time length, ensuring they are embedded directly into the static data segment of the compiled binary without any dynamic memory allocation (Zero-Allocation).
+* **Boundary & Exception Handling:** Not Applicable. The package contains no executable algorithms and crosses no external OS boundaries.

@@ -31,8 +31,10 @@
     * `MOD-007` (Pure Execution OS Boundaries): Defines the requirement for unsafe thin bindings directly mapping to the C ABI.
     * `MOD-011` (Isolated OS Boundaries and Exception Handling): Establishes the unprovable foundation where POSIX errors are generated before being trapped by the thick wrapper.
     * `MOD-012` (Execution Context & Security Model): Supplies the fundamental OS directives (`chdir`, `realpath`) required to shift the working directory and resolve the Configuration Anchor.
-* **Internal Package Dependencies:**
-    * None. This package serves as a foundational OS adapter and relies exclusively on standard Ada C-interoperability libraries (`Interfaces.C`, `Interfaces.C.Strings`).
+* **Intra-Project Dependencies:**
+    * `None`: This private thin-binding package acts as a foundational adapter to the OS and must not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Interfaces.C` & `Interfaces.C.Strings`: Utilized in the specification to map native POSIX C data types (e.g., `int`, `size_t`, `chars_ptr`) and to establish C-ABI compatibility for the `pragma Import` bindings (`access`, `chdir`, `getcwd`, `realpath`).
 
 ## 3. Interface Semantics (.ads Contract)
 

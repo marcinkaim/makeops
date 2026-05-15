@@ -31,8 +31,11 @@
     * `MOD-006` (POSIX IPC and Stream Routing): Provides the `pipe`, `dup2`, and `fcntl` definitions used to establish and rewire non-blocking anonymous pipes.
     * `MOD-007` (Pure Execution OS Boundaries): Defines the requirement for unsafe thin bindings mapping directly to the Linux C ABI.
     * `MOD-008` (System Signal Routing): Provides `waitpid` and `kill` bindings for asynchronous process state monitoring and forced termination.
-* **Internal Package Dependencies:**
-    * None. This package serves as a foundational OS adapter relying exclusively on standard Ada C-interoperability libraries (`Interfaces.C`, `Interfaces.C.Strings`, `System`).
+* **Intra-Project Dependencies:**
+    * `None`: This private thin-binding package acts as a foundational adapter to the Linux kernel and must not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Interfaces.C` & `Interfaces.C.Strings`: Utilized in the specification to map native POSIX C data types (e.g., `int`, `short`, `ptrdiff_t`, `chars_ptr`) and to establish C-ABI compatibility for the `pragma Import` bindings.
+    * `System`: Utilized in the specification to handle raw memory addresses (`System.Address`), which is strictly required for passing unstructured buffer pointers (e.g., to `c_read`) and array pointers (e.g., to `c_execvp`) cleanly across the ABI boundary.
 
 ## 3. Interface Semantics (.ads Contract)
 

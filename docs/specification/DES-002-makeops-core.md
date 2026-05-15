@@ -30,8 +30,10 @@
         * `F-002-001`: Defines the fundamental domain types required for identifying and tracking operational targets within the orchestration engine.
 * **Applies Concepts:**
     * `MOD-009` (Formal Verification & Static Memory Foundations): Utilizes strong typing and specific integer derivations to enforce algorithmic determinism and replace native Ada exceptions with verifiable return types.
-* **Internal Package Dependencies:**
-    * None. This is the root namespace of the Core subsystem and depends only on the standard Ada library.
+* **Intra-Project Dependencies:**
+    * `None`: This is the root namespace of the Core subsystem and must not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `None`: This package operates entirely on built-in types (e.g., `Integer`) and domain-specific enumerations, and does not import any standard libraries.
 
 ## 3. Interface Semantics (.ads Contract)
 

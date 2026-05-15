@@ -27,8 +27,10 @@
         * `F-003-002`: Defines the visual verbosity levels (logging levels) used to control diagnostic output granularity across the application.
 * **Applies Concepts:**
     * `MOD-016` (Observability and Visual Taxonomy Model): Establishes the foundational data types (e.g., `Log_Level` enumeration) required to enforce the "Neutral Happy Path" and route or suppress terminal streams dynamically.
-* **Internal Package Dependencies:**
-    * None. This package serves as the foundational root for the Application Layer and must not depend on any internal MakeOps units.
+* **Intra-Project Dependencies:**
+    * `None`: This package serves as the foundational root for the Application Layer and must not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `None`: This package operates entirely on domain types (enumerations) and does not import any standard libraries.
 
 ## 3. Interface Semantics (.ads Contract)
 

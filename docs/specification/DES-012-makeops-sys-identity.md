@@ -29,8 +29,10 @@
 * **Applies Concepts:**
     * `MOD-007` (Pure Execution OS Boundaries): Implements the "Thick Wrapper" side of the Dual-Layer abstraction pattern, safely encapsulating the raw C ABI binding.
     * `MOD-012` (Execution Context & Security Model): Provides the concrete mechanism to query the OS User ID to detect root execution and prevent Workspace Pollution.
-* **Internal Package Dependencies:**
-    * `MakeOps.Sys.Identity.OS_Bindings`: Consumed as the private, unsafe thin binding layer to access the native POSIX `getuid` function.
+* **Intra-Project Dependencies:**
+    * `MakeOps.Sys.Identity.OS_Bindings`: Utilized exclusively within the package body to access the unsafe native POSIX C function (`c_getuid`). This physically isolates the unprovable thin bindings from the SPARK-verified identity facade.
+* **Standard Library Dependencies:**
+    * `None`: This package operates entirely by delegating calls to the internal thin bindings and does not directly import any standard libraries.
 
 ## 3. Interface Semantics (.ads Contract)
 

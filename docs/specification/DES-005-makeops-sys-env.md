@@ -32,8 +32,11 @@
     * `MOD-009` (Formal Verification & Static Memory Foundations): Dictates the translation of unpredictable native exceptions into deterministic variant records and mandates the use of bounded strings to enforce memory safety.
     * `MOD-011` (Isolated OS Boundaries and Exception Handling): Provides the strategy for Exception Isolation and Graceful Degradation using the Dual-Pragma boundary pattern.
     * `MOD-014` (Environment Variables & Shadowing Model): Establishes the rules for extracting the `OS_Env` namespace safely.
-* **Internal Package Dependencies:**
-    * None. This package serves as a foundational OS adapter and relies exclusively on standard Ada libraries (`Ada.Environment_Variables`, `Ada.Strings.Bounded`).
+* **Intra-Project Dependencies:**
+    * `None`: This package operates as an independent, foundational OS adapter and does not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Ada.Strings.Bounded`: Utilized in the specification to instantiate `Env_Name_Strings` and `Env_Value_Strings`, enforcing the strict static memory model (Zero-Allocation) for variable keys and values.
+    * `Ada.Environment_Variables`: Utilized exclusively in the package body to perform the actual OS environment queries (`Exists` and `Value`). This dependency is safely encapsulated within the `pragma SPARK_Mode (Off)` boundary to trap native exceptions and guarantee Graceful Degradation.
 
 ## 3. Interface Semantics (.ads Contract)
 

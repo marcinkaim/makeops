@@ -29,8 +29,10 @@
         * `NFR-000-002`: Sets the absolute baseline for formal SPARK verification by enforcing mathematically pure states at the very top of the dependency tree.
 * **Applies Concepts:**
     * `MOD-009` (Formal Verification & Static Memory Foundations): Establishes the absolute purity constraint at the root of the hierarchy to guarantee zero hidden state, enabling seamless Absence of Runtime Errors (AoRE) proofs across all child namespaces.
-* **Internal Package Dependencies:**
-    * None. This is the absolute root package of the MakeOps architecture and must not depend on any internal units.
+* **Intra-Project Dependencies:**
+    * `None`: This is the absolute root package of the MakeOps architecture and must not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `None`: This package operates entirely on built-in types (e.g., `String`) and does not import any standard libraries.
 
 ## 3. Interface Semantics (.ads Contract)
 

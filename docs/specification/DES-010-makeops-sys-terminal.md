@@ -31,8 +31,10 @@
     * `MOD-010` (Text Encoding and Raw Byte Bucket Model): Accepts standard unconstrained Ada `String` arguments, treating them as raw UTF-8 byte buckets rather than semantic wide characters.
     * `MOD-011` (Isolated OS Boundaries and Exception Handling): Implements the exception isolation pattern by trapping unpredictable `Ada.Text_IO` errors (e.g., broken pipes) to preserve system stability.
     * `MOD-016` (Observability and Visual Taxonomy Model): Exposes the foundational stream routing (`stdout` vs `stderr`) consumed by the higher-level logging and taxonomy engine.
-* **Internal Package Dependencies:**
-    * None. This is a foundational subsystem component relying exclusively on the standard Ada library (`Ada.Text_IO`).
+* **Intra-Project Dependencies:**
+    * `None`: This foundational OS Facade for terminal standard streams operates independently and does not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Ada.Text_IO`: Utilized exclusively within the package body to execute the physical output operations (`Put`, `Put_Line`) and to enforce real-time stream observability (`Flush`). This dependency is safely encapsulated within a `pragma SPARK_Mode (Off)` boundary to trap and silently degrade unprovable native exceptions (e.g., `Device_Error`).
 
 ## 3. Interface Semantics (.ads Contract)
 

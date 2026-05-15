@@ -29,8 +29,10 @@
 * **Applies Concepts:**
     * `MOD-007` (Pure Execution OS Boundaries): Defines the requirement for unsafe thin bindings mapping directly to the C ABI.
     * `MOD-012` (Execution Context & Security Model): Supplies the fundamental POSIX function signature required to physically identify superuser execution.
-* **Internal Package Dependencies:**
-    * None. This package serves as a foundational OS adapter and relies exclusively on the standard Ada C-interoperability library (`Interfaces.C`).
+* **Intra-Project Dependencies:**
+    * `None`: This private thin-binding package acts as a foundational adapter to the OS (identity management) and must not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Interfaces.C`: Utilized in the specification to map the native POSIX C data type (e.g., `uid_t`) and to establish C-ABI compatibility for the `pragma Import` binding (`getuid`).
 
 ## 3. Interface Semantics (.ads Contract)
 

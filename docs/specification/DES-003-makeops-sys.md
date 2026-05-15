@@ -32,8 +32,10 @@
     * `MOD-008` (System Signal Routing): Establishes the static constants (`Exit_Success`, `Exit_Failure`) representing standardized POSIX exit statuses required for consistent pipeline integration.
     * `MOD-009` (Formal Verification & Static Memory Foundations): Enforces strong typing for error codes to prevent mixing them with standard operational integers, supporting the overall AoRE architecture.
     * `MOD-011` (Isolated OS Boundaries and Exception Handling): Defines the baseline `System_Error` exception serving as the ultimate fallback mechanism for unrecoverable hardware or OS-level panics.
-* **Internal Package Dependencies:**
-    * None. This is the absolute foundation of the Operating System boundary subsystem (`MakeOps.Sys`) and relies exclusively on the standard Ada library.
+* **Intra-Project Dependencies:**
+    * `None`: This is the absolute foundation of the Operating System boundary subsystem (`MakeOps.Sys`) and must not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Ada.Strings.Bounded`: Utilized to instantiate the `Path_Strings` package, enforcing the strict static memory model (Zero-Allocation) for storing file system paths and executable commands without dynamic heap usage.
 
 ## 3. Interface Semantics (.ads Contract)
 

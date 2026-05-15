@@ -29,8 +29,10 @@
 * **Applies Concepts:**
     * `MOD-008` (System Signal Routing): Explains the use of `Ada.Interrupts` and protected objects to safely catch `SIGINT` and `SIGTERM` signals without deadlocking the main execution loop.
     * `MOD-009` (Formal Verification & Static Memory Foundations): Requires deterministic polling of a boolean flag instead of allowing asynchronous hardware mutations to leak into the verified core logic.
-* **Internal Package Dependencies:**
-    * None. This is a foundational subsystem component relying exclusively on standard Ada libraries (`Ada.Interrupts.Names`).
+* **Intra-Project Dependencies:**
+    * `None`: This package operates as an independent, thread-aware OS Facade for routing hardware interrupts and does not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Ada.Interrupts.Names`: Utilized exclusively in the package body to explicitly reference standard POSIX signal definitions (e.g., `SIGINT`, `SIGTERM`) when attaching hardware interrupt handlers to the internal protected object.
 
 ## 3. Interface Semantics (.ads Contract)
 

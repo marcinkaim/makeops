@@ -32,8 +32,10 @@
     * `MOD-005` (Asynchronous Execution and Multiplexing): Supplies the monotonic clock and duration calculations necessary for timeout-driven multiplexing.
     * `MOD-009` (Formal Verification & Static Memory Foundations): Enforces the use of strongly typed 64-bit integers (`Duration_MS`) and private opaque records to replace unsafe floating-point time calculations.
     * `MOD-011` (Isolated OS Boundaries and Exception Handling): Identifies the hardware clock as a volatile system input that must be isolated from the pure mathematical logic of the core.
-* **Internal Package Dependencies:**
-    * `Ada.Real_Time`: Utilized as the underlying POSIX-compliant monotonic clock source.
+* **Intra-Project Dependencies:**
+    * `None`: This foundational OS Facade for monotonic time operations operates independently and does not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Ada.Real_Time`: Utilized privately in the specification and exclusively within the body to query the host's monotonic hardware clock (`Clock`) and calculate precise time spans. The private import ensures that the broader MakeOps domain remains strictly agnostic to the underlying OS time representation, preserving architectural purity.
 
 ## 3. Interface Semantics (.ads Contract)
 

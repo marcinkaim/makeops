@@ -31,8 +31,11 @@
     * `MOD-009` (Formal Verification & Static Memory Foundations): Dictates the use of strongly bounded buffers (8192 bytes) and variant records to ensure reading from files never triggers a heap allocation or buffer overflow.
     * `MOD-010` (Text Encoding and Raw Byte Bucket Model): Treats the incoming file data as raw, unconstrained byte buckets rather than semantic wide characters.
     * `MOD-011` (Isolated OS Boundaries and Exception Handling): Establishes the exception isolation pattern, translating unpredictable POSIX I/O errors into deterministic `Stream_Status` enumerations.
-* **Internal Package Dependencies:**
-    * `MakeOps.Sys.FS`: Utilized conceptually for the `Path_String` type required to locate the file to be opened.
+* **Intra-Project Dependencies:**
+    * `None`: This package serves as an independent, foundational OS Facade for reading text files and does not depend on any other packages within the project's namespace.
+* **Standard Library Dependencies:**
+    * `Ada.Strings.Bounded`: Utilized in the specification to instantiate `Line_Strings`, strictly enforcing the Static Memory Model (Zero-Allocation) for buffering text lines read from the file.
+    * `Ada.Text_IO`: Utilized privately in the specification to define the internal state of `File_Handle`, and exclusively within the package body to perform physical I/O operations (`Open`, `Get_Line`, `Close`). This dependency is safely encapsulated within a `pragma SPARK_Mode (Off)` boundary to trap and translate unprovable native I/O exceptions into deterministic domain states (`Stream_Status`).
 
 ## 3. Interface Semantics (.ads Contract)
 

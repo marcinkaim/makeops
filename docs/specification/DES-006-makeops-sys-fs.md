@@ -36,9 +36,11 @@
     * `MOD-011` (Isolated OS Boundaries and Exception Handling): Dictates the translation of unpredictable POSIX/Ada filesystem errors into deterministic variant types to support Graceful Degradation.
     * `MOD-012` (Execution Context & Security Model): Establishes the requirement for managing the Current Working Directory (CWD) and resolving the Configuration Anchor via absolute paths.
     * `MOD-009` (Formal Verification & Static Memory Foundations): Requires that all path data passed through the OS boundary adheres strictly to the statically bounded `Path_String` constraints.
-* **Internal Package Dependencies:**
-    * `MakeOps.Sys.FS.OS_Bindings`: Provides the unsafe C ABI thin bindings to POSIX filesystem functions (`access`, `chdir`, `getcwd`, `realpath`).
-    * `Ada.Directories`: Utilized exclusively for pure string manipulation (extracting containing directories) without invoking native I/O exceptions.
+* **Intra-Project Dependencies:**
+    * `MakeOps.Sys.FS.OS_Bindings`: Utilized exclusively within the package body to access native POSIX C functions (`c_access`, `c_chdir`, `c_getcwd`, `c_realpath`). This isolates the unsafe thin bindings from the verified core domain.
+* **Standard Library Dependencies:**
+    * `Ada.Directories`: Utilized exclusively in the package body (`Get_Absolute_Directory_Path`) for pure, safe string manipulation to extract the containing directory from a resolved absolute path.
+    * `Interfaces.C` & `Interfaces.C.Strings`: Utilized in the package body to handle type conversions and memory allocations (`New_String`, `Free`) required to cross the C ABI boundary safely when passing strings to the OS.
 
 ## 3. Interface Semantics (.ads Contract)
 

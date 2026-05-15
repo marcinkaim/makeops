@@ -36,9 +36,11 @@
     * `MOD-007` (Pure Execution OS Boundaries): Dictates the strict `fork` and `execvp` sequence, handling C-ABI translations and null-terminated argument arrays.
     * `MOD-008` (System Signal Routing): Explains the bitwise decoding of the `waitpid` integer status into signals and exit codes.
     * `MOD-009` (Formal Verification & Static Memory Foundations): Requires the mapping of unpredictable POSIX errors to deterministic variant records and strictly bounded string arrays.
-* **Internal Package Dependencies:**
-    * `MakeOps.Sys.FS`: Utilized for the `Path_String` type representation of the executable command.
-    * `MakeOps.Sys.Processes.OS_Bindings`: The unsafe C ABI layer providing native POSIX primitives.
+* **Intra-Project Dependencies:**
+    * `MakeOps.Sys.Processes.OS_Bindings`: Utilized exclusively within the package body to access unsafe native POSIX C functions (e.g., `c_fork`, `c_execvp`, `c_pipe`, `c_poll`, `c_waitpid`). This physically isolates the unprovable thin bindings from the SPARK-verified orchestration core.
+* **Standard Library Dependencies:**
+    * `Ada.Strings.Bounded`: Utilized in the specification to instantiate `Arg_Strings` and `Chunk_Strings`, strictly enforcing the Static Memory Model (Zero-Allocation) for executing arguments and reading stream chunks.
+    * `Interfaces.C` & `Interfaces.C.Strings`: Utilized in the package body to map native POSIX types (`int`, `pid_t`, `ssize_t`) and to manage the memory lifecycle (`New_String`, `Free`) required when crossing the C ABI boundary (e.g., preparing the null-terminated `chars_ptr_array` for `execvp`).
 
 ## 3. Interface Semantics (.ads Contract)
 

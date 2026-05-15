@@ -28,8 +28,10 @@
         * `NFR-000-005`: Enforces the use of the AUnit framework for unit testing and dictates the isolation of the build process via a dedicated GPR configuration.
 * **Applies Concepts:**
     * `MOD-009` (Formal Verification & Static Memory Foundations): Clarifies that while the core system targets AoRE, the testing infrastructure itself operates outside strict formal proof boundaries to enable robust empirical validation.
-* **Internal Package Dependencies:**
-    * `MakeOps.Tests.Base` through `MakeOps.Tests.Sys_File_Stream`: Imports child unit test packages in order to aggregate their individual test cases into the master execution suite.
+* **Intra-Project Dependencies:**
+    * `MakeOps.Tests.*` (e.g., `Base`, `Sys_Env`, `Sys_FS` through `Sys_File_Stream`): Imported within the package body to statically instantiate their individual test cases and aggregate them into the master test suite.
+* **Standard Library Dependencies:**
+    * `AUnit.Test_Suites`: Utilized as the foundational testing framework library to define the master `Access_Test_Suite` return type and manage the registration of aggregated test cases.
 
 ## 3. Interface Semantics (.ads Contract)
 
